@@ -90,7 +90,7 @@
                     </a>
                 </li>
                 <li class="nav-item  ">
-                    <a href="../Users/addClient.html" class="nav-link ">
+                    <a href="{{ route('clients.create') }}" class="nav-link ">
                         <span class="title">إضافة عميل</span>
                     </a>
                 </li>
