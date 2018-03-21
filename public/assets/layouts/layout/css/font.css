@@ -1,0 +1,44 @@
+/*
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =  
+=     00   00 00 00   00 00 00   00 00 00   00 00 00   00 00    =
+=     00   00    00        00    00    00   00    00   00       =
+=     00   00    00      00      00    00   00    00   00       =
+=     00   00    00    00        00    00   00    00   00       =
+=  00 00   00 00 00   00 00 00   00 00 00   00 00 00   00       =
+= = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+*/
+
+@font-face {
+	font-family: 'AraJozoor-Regular';
+	src: url('font/AraJozoor-Regular.eot');
+	src: local('☺'), url('font/AraJozoor-Regular.woff') format('woff'), url('font/AraJozoor-Regular.ttf') format('truetype'), url('font/AraJozoor-Regular.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/*
+ * Droid Arabic Kufi (Arabic) 
+ */
+
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 400;
+  src: url(font/droidarabickufi/DroidKufi-Regular.eot);
+  src: url(font/droidarabickufi/DroidKufi-Regular.eot?#iefix) format('embedded-opentype'),
+       url(font/droidarabickufi/DroidKufi-Regular.woff2) format('woff2'),
+       url(font/droidarabickufi/DroidKufi-Regular.woff) format('woff'),
+       url(font/droidarabickufi/DroidKufi-Regular.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Droid Arabic Kufi';
+  font-style: normal;
+  font-weight: 700;
+  src: url(font/droidarabickufi/DroidKufi-Bold.eot);
+  src: url(font/droidarabickufi/DroidKufi-Bold.eot?#iefix) format('embedded-opentype'),
+       url(font/droidarabickufi/DroidKufi-Bold.woff2) format('woff2'),
+       url(font/droidarabickufi/DroidKufi-Bold.woff) format('woff'),
+       url(font/droidarabickufi/DroidKufi-Bold.ttf) format('truetype');
+}
+
+

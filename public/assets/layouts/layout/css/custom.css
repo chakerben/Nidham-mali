@@ -1,0 +1,130 @@
+
+.small-sp {
+	min-width: 2px !important;
+    padding: 0 !important;
+}
+
+.mid-lbl {
+	margin-bottom: 0;
+	margin-top: 8px;
+	margin-left: 5px;
+	margin-right: 15px;
+}
+
+
+select.bs-select {display: none;}
+
+
+.p-relative {position: relative;}
+
+.por-indicator {
+	width: 100%;
+    position: absolute;
+    right: 0;
+	top: 2px;
+    bottom: 2px;
+}
+
+.no-padding {padding: 0 !important;}
+
+.pagination>.active>a, .pagination>.active>a:focus, .pagination>.active>a:hover, .pagination>.active>span, .pagination>.active>span:focus, .pagination>.active>span:hover {
+    z-index: 3;
+    color: #fff;
+    background-color: #7c599e;
+    border-color: #7c599e;
+    cursor: default;
+}
+
+
+
+.del-modal {background: #e29c9d;}
+.del-modal .modal-header {border: 0;}
+
+
+/*fieldset {margin-top: 30px;margin-bottom: 30px;}*/
+
+fieldset {
+	margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fbfbfb;
+    border: 1px solid #eee;
+}
+fieldset legend {
+	width: auto;
+	min-width: 110px;
+    padding: 5px 10px;
+    background: #eef7f7;
+    /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.18);*/    
+	border-radius: 6px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1), 0 0 1px rgba(0, 0, 0, 0.18);
+}
+
+
+
+.pay-indicator li {list-style: none;display: inline-block;margin-left: 10px;}
+
+.pay-indicator li:last-child {margin-left: 0;}
+
+.pay-indicator .pay-status {width: 15px;height: 15px;display: inline-block;}
+
+.pay-indicator .pay-status.done {background: #26C281;}
+
+.pay-indicator .pay-status.late {background: #d84c7d;}
+
+.pay-indicator .pay-status.wait {background: #C5942B;}
+
+
+
+
+
+
+
+.input-group-addon.btn-addon {
+    padding: 1px 5px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+     background-color: rgba(255,255,255,0.00); 
+     border: 0; 
+    border-radius: 4px;
+}
+.input-group-addon.btn-addon, .input-group-btn.btn-addon {
+    vertical-align: bottom;
+}
+
+
+
+
+
+fieldset {
+	margin-top: 30px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: #fbfbfb;
+    border: 1px solid #eee;
+}
+fieldset legand {
+	width: auto;
+    padding: 5px 10px;
+    background: #eef7f7;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+
+
+.w-100 {width: 100px !important;}
+
+
+
+.form-inline input.form-control {border-radius: 0;}
+
+
+.expenses-tbl {min-height: 960px;}
+.expenses-tbl td {vertical-align: middle !important;}
+table.dataTable.expenses-tbl.dtr-inline.collapsed > tbody > tr > td:first-child:before, table.dataTable.expenses-tbl.dtr-inline.collapsed > tbody > tr > th:first-child:before {top: auto;}
+
+
+
