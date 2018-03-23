@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class client extends Model
+class Tranche extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'paymentMode', 'details', 'file'];
+    protected $fillable = ['amount', 'date_tranche', 'project_id'];
     protected $dates = ['deleted_at'];
 
-    public function Projects()
+    public function Project()
     {
-        return $this->hasMany('App\Project');
+        return $this->belongsTo('App\Project');
     }
 }

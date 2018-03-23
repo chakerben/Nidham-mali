@@ -36,8 +36,7 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                   
-                   
+					
                     <!-- BEGIN PAGE HEADER-->
                     <h3 class="page-title"> المشاريع والخدمات
                         <small></small>
@@ -127,20 +126,17 @@
 											<div class="form-group">
 												<div class="col-md-12"> 
 												<label for="payment-num">عدد الدفعات <span>*</span></label>
-												<select id="payment-num" class="form-control select-hide select2">
+												<select name="payment-num" id="payment-num" class="form-control select-hide select2">
 													<option value="0">-- إختر --</option>
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
+													@for ($i = 1; $i < 5; $i++)
+														<option value="{{$i}}" @isset($project->Tranches) {{count($project->Tranches) === $i ? 'selected="selected"' : '' }} @endisset>{{$i}}</option>
+													@endfor
 												</select>
 												</div>
 											</div>
 											
 											<div id="payment-container" style="display: none;">
 												<label>تواريخ الدفعات <span>*</span></label>
-												
-												
 												<ol id="payment-list">
 													<!--<li>
 														<div class="form-inline">
@@ -177,10 +173,7 @@
 														<hr>
 													</li>-->
 												</ol>
-											
-											
 											</div>
-											
 										</fieldset> 
 									</div>
 									
@@ -230,11 +223,8 @@
                         
                     </div>
                     <div class="clearfix"></div>
-                    <!-- END DASHBOARD STATS 1-->
-                    
-                    
-                    
-                    
+					<!-- END DASHBOARD STATS 1-->
+					
                 </div>
                 <!-- END CONTENT BODY -->
             </div>
@@ -260,17 +250,30 @@
 					var num = $('#payment-num :selected').text();
 					$("#payment-list li").remove();
 					for (i = 0; i < num; i++) {
-						$("#payment-list").append(
-							'<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" class="form-control w-100" placeholder="القيمة" > </div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" class="form-control date" placeholder="تاريخ الدفعة"> </div></div></div><hr></li>'
-						);
+						$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
 					}
 				});
+
+
+
+				
+				var num = $('#payment-num :selected').text();
+				if (num != '-- إختر --') {
+					$("#payment-container").slideDown();
+					$("#payment-list li").remove();
+					for (i = 0; i < num; i++) {
+						$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+					}
+				}
+
+
 				
 				$("#payment-container").delegate("input[type=text].date", "focusin", function(){
 					$(this).datepicker({
 						autoclose: true,
 						todayHighlight: true,
-						language: "ar"
+						language: "ar",
+						format: "yyyy-mm-dd"
 					});
 				});
 			});	

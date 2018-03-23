@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Project;
 use App\Client;
+use App\Tranche;
 use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,17 @@ class ProjectsController extends Controller
             'remarques' => input::get('remarques'),
             'file' => input::get('___')
             ]);
+
+        $trNum = input::get('payment-num');
+        for($i=1; $i<=$trNum; $i++)
+        {
+            $tranche = Tranche::create([
+                'amount' => input::get('tranche_'.$i.'_amount'),
+                'date_tranche' => input::get('tranche_'.$i.'_date'),
+                'project_id' => $project->id
+            ]);
+        }
+
         return redirect()->route('allProjectsAndServices');
     }
 
@@ -63,6 +75,18 @@ class ProjectsController extends Controller
             'file' => (is_null($file) || empty($file) || strlen($file)) ? $project->file : $file
             ]);
         $project->save();
+
+        dd($project->Tranches()->get());
+        $trNum = input::get('payment-num');
+        for($i=1; $i<=$trNum; $i++)
+        {
+            $tranche = Tranche::create([
+                'amount' => input::get('tranche_'.$i.'_amount'),
+                'date_tranche' => input::get('tranche_'.$i.'_date'),
+                'project_id' => $project->id
+            ]);
+        }
+
         return redirect()->route('allProjectsAndServices');
     }
 
