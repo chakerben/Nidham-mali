@@ -10,4 +10,9 @@ class client extends Model
     use SoftDeletes;
     protected $fillable = ['name', 'paymentMode', 'details', 'file'];
     protected $dates = ['deleted_at'];
+
+    public function comments()
+    {
+        return $this->hasMany('App\Project');
+    }
 }

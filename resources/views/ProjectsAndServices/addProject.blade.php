@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="{{ app()->getLocale() }}" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="{{ app()->getLocale() }}" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="{{ app()->getLocale() }}" dir="rtl">
     <!--<![endif]-->
@@ -101,10 +101,11 @@
 											<label for="single" name="client_id">العميل <span>*</span></label>
 											<select id="single" name="client_id" class="form-control select2">
 												<option></option>
-												<option value="1" @isset($project->client_id) {{ $project->client_id == 1 ? 'selected="selected"' : '' }} @endisset>1</option>
-												<option value="2" @isset($project->client_id) {{ $project->client_id == 2 ? 'selected="selected"' : '' }} @endisset>2</option>
-												<option value="3" @isset($project->client_id) {{ $project->client_id == 3 ? 'selected="selected"' : '' }} @endisset>3</option>
-												<option value="4" @isset($project->client_id) {{ $project->client_id == 4 ? 'selected="selected"' : '' }} @endisset>4</option>
+												@foreach ($clients as $client)
+													<option value="{{$client->id}}" @isset($project) {{ $project->cliMatch($client->id) ? 'selected="selected"' : '' }} @endisset>
+														{{$client->name}}
+													</option>
+												@endforeach
 											</select>
 										</div>
 									</div>                           

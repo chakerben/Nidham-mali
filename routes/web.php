@@ -22,3 +22,5 @@ Route::resource('expenses', 'ExpensesController');
 Route::resource('payments', 'PaymentsController');
 Route::get('/allUsers', 'allUsers@index')->name('allUsers');
 Route::resource('clients', 'ClientController');
+Route::resource('employees', 'EmployeeController');
+Route::resource('users', 'UserController');

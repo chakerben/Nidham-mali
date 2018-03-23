@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="{{ app()->getLocale() }}" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="{{ app()->getLocale() }}" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="{{ app()->getLocale() }}" dir="rtl">
     <!--<![endif]-->
@@ -43,7 +43,7 @@
                         <small></small>
                     </h3>
                     <div class="page-bar">
-                        @include('common.breadcrumb', ['section' => 'عنوان القسم', 'route' => 'allUsers', 'page' => 'إضافة عميل'])
+                        @include('common.breadcrumb', ['section' => 'المستخدمين', 'route' => 'allUsers', 'page' => 'إضافة عميل'])
                     </div>
                     <!-- END PAGE HEADER-->
                     <!-- BEGIN DASHBOARD STATS 1-->

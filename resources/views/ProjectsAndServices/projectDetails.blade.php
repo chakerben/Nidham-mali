@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
-<!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
-<!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
+<!--[if IE 8]> <html lang="{{ app()->getLocale() }}" class="ie8 no-js"> <![endif]-->
+<!--[if IE 9]> <html lang="{{ app()->getLocale() }}" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
 <html lang="{{ app()->getLocale() }}" dir="rtl">
     <!--<![endif]-->
@@ -97,7 +97,7 @@
 										<label>العميل </label>
 										<div class="input-icon">
 											<i class="fa fa-user font-green "></i>
-											<input type="text" class="form-control" value="{{$project->client_id}}" disabled> 
+											<input type="text" class="form-control" value="{{$project->client->name}}" disabled> 
 										</div>
 									</div>
 							     </div>                           

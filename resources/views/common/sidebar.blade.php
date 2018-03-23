@@ -85,7 +85,7 @@
             </a>
             <ul class="sub-menu">
                 <li class="nav-item  ">
-                    <a href="../Users/allUsers.html" class="nav-link ">
+                    <a href="{{ route('allUsers') }}" class="nav-link ">
                         <span class="title">كل المستخدمين</span>
                     </a>
                 </li>
@@ -95,12 +95,12 @@
                     </a>
                 </li>
                 <li class="nav-item  ">
-                    <a href="../Users/addEmployee.html" class="nav-link ">
+                    <a href="{{ route('employees.create') }}" class="nav-link ">
                         <span class="title">كل مقدم خدمة</span>
                     </a>
                 </li>
                 <li class="nav-item  ">
-                    <a href="../Users/addUser.html" class="nav-link ">
+                    <a href="{{ route('users.create') }}" class="nav-link ">
                         <span class="title">إضافة مستخدم</span>
                     </a>
                 </li>
