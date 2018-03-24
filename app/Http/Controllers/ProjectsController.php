@@ -76,17 +76,37 @@ class ProjectsController extends Controller
             ]);
         $project->save();
 
-        dd($project->Tranches()->get());
+        $count = $project->Tranches()->count();
+        $prjTranches = $project->Tranches()->get();
         $trNum = input::get('payment-num');
-        for($i=1; $i<=$trNum; $i++)
-        {
-            $tranche = Tranche::create([
-                'amount' => input::get('tranche_'.$i.'_amount'),
-                'date_tranche' => input::get('tranche_'.$i.'_date'),
-                'project_id' => $project->id
-            ]);
-        }
 
+        if($trNum <= $count){
+            $project->Tranches()->delete();
+            for($i=1; $i<=$trNum; $i++){
+                $tranche = Tranche::create([
+                    'amount' => input::get('tranche_'.$i.'_amount'),
+                    'date_tranche' => input::get('tranche_'.$i.'_date'),
+                    'project_id' => $project->id
+                ]);
+            }
+        } else {
+            for($i=1; $i<=$count; $i++){
+                $tranche = $prjTranches[$i-1];
+                $tranche->fill([
+                    'amount' => input::get('tranche_'.$i.'_amount'),
+                    'date_tranche' => input::get('tranche_'.$i.'_date'),
+                    'project_id' => $project->id
+                ]);
+                $tranche->save();
+            }
+            for($i=$count+1; $i<=$trNum; $i++){
+                $tranche = Tranche::create([
+                    'amount' => input::get('tranche_'.$i.'_amount'),
+                    'date_tranche' => input::get('tranche_'.$i.'_date'),
+                    'project_id' => $project->id
+                ]);
+            }
+        }
         return redirect()->route('allProjectsAndServices');
     }
 

@@ -248,25 +248,34 @@
 				$('#payment-num').on('change', function() {
 					$("#payment-container").slideDown();
 					var num = $('#payment-num :selected').text();
+					@isset($project) var trs = {!! $project->tranches !!} @endisset;
+					@empty($project) var trs = []; @endempty
 					$("#payment-list li").remove();
-					for (i = 0; i < num; i++) {
-						$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+					if(trs.length<num){
+						for (let i = 0; i < trs.length ; i++) {
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+						}
+						for (i = trs.length; i < num; i++) {
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+						}
+					} else {
+						for (let i = 0; i < num ; i++) {
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+						}
 					}
 				});
-
-
-
 				
 				var num = $('#payment-num :selected').text();
 				if (num != '-- إختر --') {
+					@isset($project) var trs = {!! $project->tranches !!} @endisset;
+					@empty($project) var trs = []; @endempty
+					console.log(trs);
 					$("#payment-container").slideDown();
 					$("#payment-list li").remove();
 					for (i = 0; i < num; i++) {
-						$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+						$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
 					}
 				}
-
-
 				
 				$("#payment-container").delegate("input[type=text].date", "focusin", function(){
 					$(this).datepicker({

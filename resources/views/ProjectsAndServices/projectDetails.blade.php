@@ -121,7 +121,8 @@
                                             <label>عدد الدفعات </label>
                                             <div class="input-icon">
                                                 <i class="fa fa-money font-green "></i>
-                                                <input type="text" class="form-control" value="4" disabled> 
+                                                @isset($project->Tranches) <input type="text" class="form-control" value="{{count($project->Tranches)}}" disabled> @endisset 
+                                                @empty($project->Tranches) <input type="text" class="form-control" value="0" disabled> @endempty 
                                             </div>
                                         </div>
                                         <div class="col-md-4 col-xs-12">
@@ -164,50 +165,65 @@
                                                     </div>
                                                     <div class="mt-list-container list-simple ext-1 bg-white">
                                                         <ul>
+                                                            @foreach ($project->Tranches as $tranche)
                                                             <li class="mt-list-item done">
                                                                 <div class="list-icon-container">
                                                                     <i class="icon-check"></i>
                                                                 </div>
-                                                                <div class="list-datetime"> 24/2/2018 </div>
+                                                                <div class="list-datetime"> {{$tranche->date_tranche}} </div>
                                                                 <div class="list-item-content">
                                                                     <h3 class="uppercase">
-                                                                        <a href="javascript:;">500 ريال</a>
+                                                                        <a href="javascript:;">{{$tranche->amount}} ريال</a>
                                                                     </h3>
                                                                 </div>
                                                             </li>
-                                                            <li class="mt-list-item done">
-                                                                <div class="list-icon-container">
-                                                                    <i class="icon-check"></i>
-                                                                </div>
-                                                                <div class="list-datetime"> 24/2/2018 </div>
-                                                                <div class="list-item-content">
-                                                                    <h3 class="uppercase">
-                                                                        <a href="javascript:;">150 ريال</a>
-                                                                    </h3>
-                                                                </div>
-                                                            </li>
-                                                            <li class="mt-list-item late">
-                                                                <div class="list-icon-container">
-                                                                    <i class="icon-close"></i>
-                                                                </div>
-                                                                <div class="list-datetime"> 24/2/2018 </div>
-                                                                <div class="list-item-content">
-                                                                    <h3 class="uppercase">
-                                                                        <a href="javascript:;">100 ريال</a>
-                                                                    </h3>
-                                                                </div>
-                                                            </li>
-                                                            <li class="mt-list-item wait">
-                                                                <div class="list-icon-container">
-                                                                    <i class="icon-close"></i>
-                                                                </div>
-                                                                <div class="list-datetime"> 24/2/2018 </div>
-                                                                <div class="list-item-content">
-                                                                    <h3 class="uppercase">
-                                                                        <a href="javascript:;">250 ريال</a>
-                                                                    </h3>
-                                                                </div>
-                                                            </li>
+                                                            @endforeach
+                                                            <!--
+                                                                <li class="mt-list-item done">
+                                                                    <div class="list-icon-container">
+                                                                        <i class="icon-check"></i>
+                                                                    </div>
+                                                                    <div class="list-datetime"> 24/2/2018 </div>
+                                                                    <div class="list-item-content">
+                                                                        <h3 class="uppercase">
+                                                                            <a href="javascript:;">500 ريال</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="mt-list-item done">
+                                                                    <div class="list-icon-container">
+                                                                        <i class="icon-check"></i>
+                                                                    </div>
+                                                                    <div class="list-datetime"> 24/2/2018 </div>
+                                                                    <div class="list-item-content">
+                                                                        <h3 class="uppercase">
+                                                                            <a href="javascript:;">150 ريال</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="mt-list-item late">
+                                                                    <div class="list-icon-container">
+                                                                        <i class="icon-close"></i>
+                                                                    </div>
+                                                                    <div class="list-datetime"> 24/2/2018 </div>
+                                                                    <div class="list-item-content">
+                                                                        <h3 class="uppercase">
+                                                                            <a href="javascript:;">100 ريال</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </li>
+                                                                <li class="mt-list-item wait">
+                                                                    <div class="list-icon-container">
+                                                                        <i class="icon-close"></i>
+                                                                    </div>
+                                                                    <div class="list-datetime"> 24/2/2018 </div>
+                                                                    <div class="list-item-content">
+                                                                        <h3 class="uppercase">
+                                                                            <a href="javascript:;">250 ريال</a>
+                                                                        </h3>
+                                                                    </div>
+                                                                </li>
+                                                            -->
                                                         </ul>
                                                     </div>
                                                 </div>
