@@ -15,10 +15,12 @@ class Project extends Model
     {
         return $this->belongsTo('App\client');
     }
+    
     public function Tranches()
     {
         return $this->hasMany('App\Tranche');
     }
+
     public function cliMatch($id)
     {
         return $id === $this->client_id;

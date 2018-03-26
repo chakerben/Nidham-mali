@@ -22,7 +22,7 @@ class CreateProjectsTable extends Migration
             $table->decimal('cost', 15, 2)->default(0);
             $table->text('remarques');
             $table->decimal('benefis', 15, 2)->default(0);
-            $table->string('file', 100);
+            $table->string('file', 100)->nullable();
             $table->boolean('finished')->default(0);
             $table->integer('client_id')->foreign('client_id')->references('id')->on('clients');
             $table->softDeletes();

@@ -15,4 +15,9 @@ class Tranche extends Model
     {
         return $this->belongsTo('App\Project');
     }
+    
+    public function Payments()
+    {
+        return $this->hasMany('App\Payment');
+    }
 }
