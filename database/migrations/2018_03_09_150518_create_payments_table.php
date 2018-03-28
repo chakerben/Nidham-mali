@@ -25,6 +25,7 @@ class CreatePaymentsTable extends Migration
             $table->integer('tranche_id')->foreign('tranche_id')->references('id')->on('tranches');
             $table->integer('bank_from_id')->nullable();#->foreign('bank_from_id')->references('id')->on('banks');
             $table->integer('person_transfer_id')->nullable();#->foreign('person_transfer_id')->references('id')->on('banks');            
+            $table->softDeletes();
             $table->timestamps();
         });
     }

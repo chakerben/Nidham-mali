@@ -25,4 +25,9 @@ class Project extends Model
     {
         return $id === $this->client_id;
     }
+
+    public function prjMatch($id)
+    {
+        return $id === $this->id;
+    }
 }

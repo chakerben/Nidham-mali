@@ -15,4 +15,9 @@ class Payment extends Model
     {
         return $this->belongsTo('App\Tranche');
     }
+
+    public function trMatch($id)
+    {
+        return $id === $this->tranche->id;
+    }
 }

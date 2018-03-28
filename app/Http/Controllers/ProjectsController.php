@@ -116,4 +116,9 @@ class ProjectsController extends Controller
         $project->delete();
         return redirect()->route('allProjectsAndServices');
     }
+
+    public function jsonProjectTranches($projectId){
+        $project = Project::findOrFail($projectId);
+        return $project->Tranches()->select('id', 'amount')->get()->toJson();
+    }
 }
