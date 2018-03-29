@@ -18,6 +18,15 @@ class ProjectsController extends Controller
     public function show($projectId)
     {
         $project = Project::findOrFail($projectId);
+        
+        $project->payd = 0;
+        foreach($project->tranches as $tranche){
+            foreach($tranche->payments as $payment){
+                $project->payd += $payment->amount;
+            }
+        }
+        $project->dept = 0;
+
         return view('ProjectsAndServices.projectDetails', ["project" => $project]);
     }
 

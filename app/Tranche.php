@@ -20,4 +20,9 @@ class Tranche extends Model
     {
         return $this->hasMany('App\Payment');
     }
+
+    public function isLate()
+    {
+        return $this->date_tranche < date("Y-m-d");
+    }
 }

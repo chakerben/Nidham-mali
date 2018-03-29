@@ -142,7 +142,7 @@
 												<label>الباقى <span>*</span></label>
 												<div class="input-icon">
 													<i class="fa fa-money font-green "></i>
-												<input type="text" id="restAmount" class="form-control" @isset($payment) value="{{$payment->tranche->amount - $payment->amount}}" @endisset disabled> 
+												<input type="text" id="restAmount" name="restAmount" class="form-control" @isset($payment) value="{{$payment->tranche->amount - $payment->amount}}" @endisset readonly> 
 												</div>
 											</div>
 										</div>
@@ -356,7 +356,7 @@
 			$('#amount').on('input', function(){
 				var trAmount = $('#tranchAmount').val();
 				var payAmount = $(this).val();
-				$('#restAmount').val(trAmount-payAmount);
+				$('#restAmount').val(trAmount-payAmount).attr('value', trAmount-payAmount);
 			});
 		</script>
     </body>

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use App\Project;
-//use App\Tranche;
+use App\Tranche;
 use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 
@@ -20,8 +20,8 @@ class PaymentsController extends Controller
     public function show($paymentId)
     {
         $payment = Payment::findOrFail($paymentId);
-        #return view('PaymentsAndServices.paymentDetails', ["payment" => $payment]);
-        dd($payment);
+        return view('PaymentsAndServices.paymentDetails', ["payment" => $payment]);
+        #dd($payment);
     }
 
     public function create()
@@ -44,6 +44,11 @@ class PaymentsController extends Controller
             'bank_from_id' => input::get('bank_from_id'),
             'person_transfer_id' => input::get('person_transfer_id')
             ]);
+            
+        if (!input::get('restAmount')) {
+            $payment->tranche->payed = 1;
+            $payment->tranche->save();
+        }
 
         return redirect()->route('payments.index');
     }
@@ -75,6 +80,11 @@ class PaymentsController extends Controller
             'file' => (is_null($file) || empty($file) || strlen($file)) ? $payment->file : $file
             ]);
         $payment->save();
+
+        if (!input::get('restAmount')) {
+            $payment->tranche->payed = 1;
+            $payment->tranche->save();
+        }
             
         return redirect()->route('payments.index');
     }
