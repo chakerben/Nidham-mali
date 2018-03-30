@@ -166,7 +166,7 @@
                                                                             <div class="list-icon-container">
                                                                                 @if($tranche->payed) <i class="icon-check"></i> @else <i class="icon-close"></i> @endif
                                                                             </div>
-                                                                            <div class="list-datetime"> {{$tranche->date_tranche}}</div>
+                                                                            <div class="list-datetime"> {{ \Carbon\Carbon::parse($tranche->date_tranche)->format('d/m/Y') }}</div>
                                                                             <div class="list-item-content">
                                                                                 <h3 class="uppercase">
                                                                                     <a href="javascript:;">{{$tranche->amount}} ريال</a>

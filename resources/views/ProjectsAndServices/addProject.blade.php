@@ -238,6 +238,27 @@
         @include('common.scripts')
         
         <script>
+			var costFirst = true;
+
+			function calcul() {
+				var cost = $("#cost").val();
+				var count = $("#payment-list li").length;
+
+				if (costFirst) {
+					var rest = parseInt(cost);
+					for (let i = 0; i < count-1; i++) {
+						rest -= ($("#tanche_"+(i+1)+"_amount").val()) ? parseInt($("#tanche_"+(i+1)+"_amount").val()) : 0;
+					}
+					$("#tanche_"+count+"_amount").val(rest);
+				} else {
+					var total = 0;
+					for (let i = 0; i < count; i++) {
+						total += ($("#tanche_"+(i+1)+"_amount").val()) ? parseInt($("#tanche_"+(i+1)+"_amount").val()) : 0;
+					}
+					$("#cost").val(total);
+				}
+			}
+
 			$(document).on('ready', function() {
 				// Without Search
 				$(".select-hide").select2({
@@ -247,29 +268,39 @@
 				
 				$('#payment-num').on('change', function() {
 					$("#payment-container").slideDown();
+					//Récupérer le nombre de tranches
 					var num = $('#payment-num :selected').text();
+
+					//Désactiver le champs du cout total du projet
+					$("#cost").prop('readonly', (num != '-- إختر --'));
+					costFirst = $("#cost").val() ? true : false;
+
+					//Récupérer la liste des tranches du projet (mode édition)
 					@isset($project) var trs = {!! $project->tranches !!} @endisset;
 					@empty($project) var trs = []; @endempty
+					//Vider la liste des tranche
 					$("#payment-list li").remove();
+					//Liste dynamique des tranches
 					if(trs.length<num){
 						for (let i = 0; i < trs.length ; i++) {
-							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" oninput="calcul()" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
 						}
 						for (i = trs.length; i < num; i++) {
-							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" placeholder="القيمة" oninput="calcul()" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
 						}
 					} else {
 						for (let i = 0; i < num ; i++) {
-							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
+							$("#payment-list").append('<li><div class="form-inline"><div class="form-group"><label class="sr-only">القيمة</label><div class="input-icon"><i class="fa fa-money font-green"></i><input type="text" name="tranche_'+(i+1)+'_amount" id="tanche_'+(i+1)+'_amount" class="form-control w-100" value="'+trs[i].amount+'" placeholder="القيمة" oninput="calcul()" ></div></div><div class="form-group"><label class="sr-only">تاريخ الدفعة</label><div class="input-icon"><i class="fa fa-calendar-check-o font-green "></i><input type="text" name="tranche_'+(i+1)+'_date" id="tanche_'+(i+1)+'_date" class="form-control date" value="'+trs[i].date_tranche+'" placeholder="تاريخ الدفعة"></div></div></div><hr></li>');
 						}
 					}
+
+					$("#tanche_" + num + "_amount").prop('readonly', costFirst).val($("#cost").val());
 				});
 				
 				var num = $('#payment-num :selected').text();
 				if (num != '-- إختر --') {
 					@isset($project) var trs = {!! $project->tranches !!} @endisset;
 					@empty($project) var trs = []; @endempty
-					console.log(trs);
 					$("#payment-container").slideDown();
 					$("#payment-list li").remove();
 					for (i = 0; i < num; i++) {
