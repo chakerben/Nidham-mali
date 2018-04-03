@@ -27,7 +27,7 @@
         <div class="page-container">
             <!-- BEGIN SIDEBAR -->
             <div class="page-sidebar-wrapper">
-                <!-- END SIDEBAR -->
+                <!-- BEGIN SIDEBAR -->
                 @include('common.sidebar');
                 <!-- END SIDEBAR -->
             </div>
