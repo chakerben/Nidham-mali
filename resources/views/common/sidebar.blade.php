@@ -72,7 +72,7 @@
             </ul>
         </li>
         <li class="nav-item  ">
-            <a href="../Settings/settings.html" class="nav-link nav-toggle">
+            <a href="{{ route('settings') }}" class="nav-link nav-toggle">
                 <i class="icon-settings"></i>
                 <span class="title">الإعدادات</span>
             </a>

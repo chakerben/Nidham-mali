@@ -106,13 +106,7 @@
 									 عميل
 									</label>
 								</div>
-
-								  
-
-								  
-								  
 								
-
 								<div class="clearfix"></div>
 									
 								<div class="text-center margin-top-30">

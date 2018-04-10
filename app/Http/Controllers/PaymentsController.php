@@ -57,8 +57,6 @@ class PaymentsController extends Controller
     {
         $projects = Project::select('id', 'name')->get();
         $payment = Payment::with('tranche.project.client')->findOrFail($paymentId);
-        $trs = $payment->tranche->project->Tranches()->get();
-        #dd($trs);
         return view('Payments.addPayment', ["projects" => $projects, "payment" => $payment]);
     }
 

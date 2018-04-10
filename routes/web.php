@@ -11,16 +11,29 @@
 |
 */
 
-Route::get('/', ['as' => 'home', function () {
+Route::GET('/', ['as' => 'home', function () {
     return view('dashboard');
 }]);
 
-Route::get('/allProjectsAndServices', 'allProjectsAndServices@index')->name('allProjectsAndServices');
+Route::GET('/allProjectsAndServices', 'allProjectsAndServices@index')->name('allProjectsAndServices');
 Route::resource('projects', 'ProjectsController');
 Route::resource('services', 'ServicesController');
 Route::resource('expenses', 'ExpensesController');
 Route::resource('payments', 'PaymentsController');
-Route::get('/allUsers', 'allUsers@index')->name('allUsers');
+Route::GET('/allUsers', 'allUsers@index')->name('allUsers');
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('users', 'UserController');
+
+Route::GET('/settings', 'settingsController@index')->name('settings');
+Route::POST('/settings', 'settingsController@setSetting')->name('setSetting');
+Route::POST('/settings/createrole', 'settingsController@createRole')->name('createRole');
+Route::POST('/settings/createxpensetype', 'settingsController@createExpenseType')->name('createExpenseType');
+Route::POST('/settings/createtransfermethode', 'settingsController@createTransferMethode')->name('createTransferMethode');
+Route::POST('/settings/createbankacount', 'settingsController@createBankAcount')->name('createBankAcount');
+Route::POST('/settings/createrate', 'settingsController@createRate')->name('createRate');
+Route::DELETE('/settings/deleterate/{id}', 'settingsController@deleteRate')->name('deleteRate');
+Route::GET('/settings/editrate/{id}', 'settingsController@editRate')->name('editRate');
+Route::PUT('/settings/editrate/{id}', 'settingsController@updateRate')->name('updateRate');
+
+//Route::resource('transfer', 'TransferController');

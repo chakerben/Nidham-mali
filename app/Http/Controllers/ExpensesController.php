@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Expense;
-//use App\ExpenseType;
-//use App\Comptes;
+use App\ExpenseType;
+use App\BancAcount;
 use App\Project;
 use App\Service;
-use App\Employee;
+use App\TransferMethode;
+use App\Rate;
+//use App\Employee;
 use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 
@@ -15,88 +17,88 @@ class ExpensesController extends Controller
 {
     public function index()
     {
-        $listPay = Expense::with('tranche.project.client')->get();
-        //dd($listPay);
-        return view('Expenses.index', ['listPay' => $listPay]);
+        $listExp = Expense::all();
+        #dd($listExp);
+        return view('Expenses.index', ['listExp' => $listExp]);
     }
 
     public function show()
     {
-        $expense = Expense::findOrFail($paymentId);
+        $expense = Expense::findOrFail($expenseId);
         #dd($expense);
-        return view('ExpensesAndServices.paymentDetails', ["expense" => $expense]);
+        return view('Expenses.addExpense', ["expense" => $expense]);
     }
 
     public function create()
     {
         $projects = Project::select('id', 'name')->get();
         $services = Service::select('id', 'name')->get();
-        $listProp = Employee::select('id', 'name')->get();
-        //$sxpenseTypes = ExpenseType::select('id', 'name')->get();
-        //$comptes = Comptes::select('id', 'name')->get();
-        return view('Expenses.addExpense', ["projects" => $projects, 'services' => $services]);
+        $expenseTypes = ExpenseType::select('id', 'name')->get();
+        //$listProp = Employee::select('id', 'name')->get();
+        $bancAcounts = BancAcount::select('id', 'bank_name', 'count_num')->get();
+        $transferMethodes = TransferMethode::select('id', 'name')->get();
+        $rates = Rate::select('id', 'name')->get();
+        return view('Expenses.addExpense', ["projects" => $projects, 'services' => $services, "rates" => $rates,
+            "expenseTypes" => $expenseTypes, "bancAcounts" => $bancAcounts, "transferMethodes" => $transferMethodes]);
     }
 
     public function store()
     {
         $expense = Expense::create([
-            'amount' => input::get('amount'),
+            'name' => input::get('name'),
             'type' => input::get('type'),
-            'date_payment' => input::get('date_payment'),
+            'details' => input::get('details'),
+            'prop_id' => input::get('prop_id'),
+            'project_id' => input::get('project_id'),
+            'service_id' => input::get('service_id'),
+            'compte_id' => input::get('compte_id'),
+            'methode_transfert_id' => input::get('methode_transfert_id'),
+            'amount' => input::get('amount'),
+            'expense_date' => input::get('expense_date'),
             'file' => input::get('___'),
-            'chek_number' => input::get('chek_number'),
-            'paypal_acount' => input::get('paypal_acount'),
-            'bank_to_id' => input::get('bank_to_id'),
-            'tranche_id' => input::get('tranche_id'),
-            'bank_from_id' => input::get('bank_from_id'),
-            'person_transfer_id' => input::get('person_transfer_id')
+            'remarques' => input::get('remarques')
             ]);
 
-        return redirect()->route('payments.index');
+        return redirect()->route('expenses.index');
     }
 
-    public function edit()
+    public function edit($expenseId)
     {
         $projects = Project::select('id', 'name')->get();
         $services = Service::select('id', 'name')->get();
 
-        $expense = Expense::with('tranche.project.client')->findOrFail($paymentId);
-        $trs = $expense->tranche->project->Tranches()->get();
-        #dd($trs);
+        $expense = Expense::findOrFail($expenseId);
         return view('Expenses.addExpense', ["projects" => $projects, "expense" => $expense]);
     }
 
     public function update()
     {
-        $expense = Expense::findOrFail($paymentId);
+        $expense = Expense::findOrFail($expenseId);
         
         $file = input::get('___');
         $expense->fill([
-            'amount' => input::get('amount'),
+            'name' => input::get('name'),
             'type' => input::get('type'),
-            'date_payment' => input::get('date_payment'),
-            'chek_number' => input::get('chek_number'),
-            'paypal_acount' => input::get('paypal_acount'),
-            'bank_to_id' => input::get('bank_to_id'),
-            'tranche_id' => input::get('tranche_id'),
-            'bank_from_id' => input::get('bank_from_id'),
-            'person_transfer_id' => input::get('person_transfer_id'),
+            'details' => input::get('details'),
+            'prop_id' => input::get('prop_id'),
+            'project_id' => input::get('project_id'),
+            'service_id' => input::get('service_id'),
+            'compte_id' => input::get('compte_id'),
+            'methode_transfert_id' => input::get('methode_transfert_id'),
+            'amount' => input::get('amount'),
+            'expense_date' => input::get('expense_date'),
+            'remarques' => input::get('remarques'),
             'file' => (is_null($file) || empty($file) || strlen($file)) ? $expense->file : $file
             ]);
         $expense->save();
-
-        if (!input::get('restAmount')) {
-            $expense->tranche->payed = 1;
-            $expense->tranche->save();
-        }
             
-        return redirect()->route('payments.index');
+        return redirect()->route('expenses.index');
     }
 
     public function destroy()
     {
-        $expense = Expense::findOrFail($paymentId);
+        $expense = Expense::findOrFail($expenseId);
         $expense->delete();
-        return redirect()->route('payments.index');
+        return redirect()->route('expenses.index');
     }
 }

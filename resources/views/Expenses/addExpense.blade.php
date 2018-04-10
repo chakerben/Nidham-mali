@@ -79,9 +79,11 @@
 											<label for="type">النوع <span>*</span></label>
 											<select name="type" id="type" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
-												<option value="1">مشروع</option>
-												<option value="2">خدمة</option>
-												<option value="3">مكافئة</option>
+												@isset($expenseTypes)
+													@foreach ($expenseTypes as $expenseType)
+														<option value="{{ $expenseType->id }}">{{ $expenseType->name }}</option>
+													@endforeach
+												@endisset
 											</select>
 										</div>
 									</div>                           
@@ -129,10 +131,11 @@
 											<label for="compte_id">الحساب المحول منه <span>*</span></label>
 											<select name="compte_id" id="compte_id" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
+												@isset($bancAcounts)
+													@foreach ($bancAcounts as $bancAcount)
+														<option value="{{ $bancAcount->id }}">{{ $bancAcount->bank_name }} - {{ $bancAcount->count_num }}</option>
+													@endforeach
+												@endisset
 											</select>
 										</div>
 									</div>
@@ -142,10 +145,11 @@
 											<label for="methode_transfert_id">طريقة التحويل <span>*</span></label>
 											<select name="methode_transfert_id" id="methode_transfert_id" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
+												@isset($transferMethodes)
+													@foreach ($transferMethodes as $transferMethode)
+														<option value="{{ $transferMethode->id }}">{{ $transferMethode->name }}</option>
+													@endforeach
+												@endisset
 											</select>
 										</div>
 									</div>       
@@ -168,10 +172,11 @@
 											<label for="single10">إضافة نسبة <span>*</span></label>
 											<select id="single10" class="form-control select2 " multiple>
 												<option>-- إختر --</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
+												@isset($rates)
+													@foreach ($rates as $rate)
+														<option value="{{ $rate->id }}">{{ $rate->name }}</option>
+													@endforeach
+												@endisset
 											</select>
 										</div>
 									</div>                               
@@ -297,7 +302,8 @@
 			$('.date').datepicker({
 				autoclose: true,
 				todayHighlight: true,
-				language: "ar"
+				language: "ar",
+				format: "yyyy-mm-dd"
 			});
 		</script>
     </body>
