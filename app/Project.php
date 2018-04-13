@@ -20,6 +20,11 @@ class Project extends Model
     {
         return $this->hasMany('App\Tranche');
     }
+    
+    public function Expenses()
+    {
+        return $this->hasMany('App\Expense');
+    }
 
     public function cliMatch($id)
     {

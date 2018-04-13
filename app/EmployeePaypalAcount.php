@@ -5,14 +5,14 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ExpenseType extends Model
+class EmployeePaypalAcount extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name'];
+    protected $fillable = ['email', 'employee_id'];
     protected $dates = ['deleted_at'];
 
-    public function Expenses()
+    public function Employee()
     {
-        return $this->hasMany('App\Expense');
+        return $this->belongsTo('App\employee');
     }
 }

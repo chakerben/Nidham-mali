@@ -267,21 +267,23 @@
 												<td class="p-relative">
 													<div class="por-indicator bg-red"></div>
 												</td>
-												<td>تصميم وبرمجة متجر الكترونى</td>
-												<td>مشروع</td>
+												<td>{{ $exp->name }}</td>
+												<td>{{ $exp->type->name }}</td>
 												<td>{{ $exp->id }}</td>
 												<td>{{ $exp->amount }}</td>
-												<td>اسم العميل طالب الخدمة</td>
+												
+												<td> @isset($exp->Project) {{$exp->Project->client->name}} @endisset </td>
+												
 												<td class="text-center">
 													<div class="btn-group">
 														<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
 															<i class="fa fa-angle-down"></i>
 														</a>
 														<ul class="dropdown-menu pull-right">
-																<li><a href="{{ route('expenses.show', $exp->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																<li><a href="{{ route('expenses.edit', $exp->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																<li><a href="#basic" class="font-red" data-toggle="modal"id="{{ $exp->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-																<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+															<li><a href="{{ route('expenses.show', $exp->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
+															<li><a href="{{ route('expenses.edit', $exp->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
+															<li><a href="#basic" class="font-red" data-toggle="modal"id="{{ $exp->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
+															<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 														</ul>
 													</div>
 												</td>

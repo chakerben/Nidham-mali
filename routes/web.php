@@ -11,10 +11,11 @@
 |
 */
 
-Route::GET('/', ['as' => 'home', function () {
+/*Route::GET('/', ['as' => 'home', function () {
     return view('dashboard');
-}]);
+}]);*/
 
+Route::GET('/', 'dashboardController@index')->name('home');
 Route::GET('/allProjectsAndServices', 'allProjectsAndServices@index')->name('allProjectsAndServices');
 Route::resource('projects', 'ProjectsController');
 Route::resource('services', 'ServicesController');
@@ -24,6 +25,7 @@ Route::GET('/allUsers', 'allUsers@index')->name('allUsers');
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('users', 'UserController');
+Route::resource('transfer', 'TransferController');
 
 Route::GET('/settings', 'settingsController@index')->name('settings');
 Route::POST('/settings', 'settingsController@setSetting')->name('setSetting');
@@ -35,5 +37,8 @@ Route::POST('/settings/createrate', 'settingsController@createRate')->name('crea
 Route::DELETE('/settings/deleterate/{id}', 'settingsController@deleteRate')->name('deleteRate');
 Route::GET('/settings/editrate/{id}', 'settingsController@editRate')->name('editRate');
 Route::PUT('/settings/editrate/{id}', 'settingsController@updateRate')->name('updateRate');
+Route::GET('/settings/edittransfer/{id}', 'settingsController@editTransfer')->name('editTransfer');
 
-//Route::resource('transfer', 'TransferController');
+Route::POST('/employees/addemppaypalacount/{id}', 'EmployeeController@storePaypalAcount')->name('addEmpPaypalAcount');
+Route::POST('/employees/addempbankacount/{id}', 'EmployeeController@storeBankAcount')->name('addEmpBankAcount');
+Route::POST('/employees/addemptransfermethod/{id}', 'EmployeeController@storeOtherTransferMethod')->name('addEmpTransferMethod');

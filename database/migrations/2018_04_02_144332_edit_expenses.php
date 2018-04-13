@@ -17,11 +17,11 @@ class EditExpenses extends Migration
             $table->string('name', 100)->unique();
             $table->integer('type');
             $table->text('details')->nullable();
-            $table->integer('prop_id');//->foreign('prop_id')->references('id')->on('users');
+            $table->integer('prop_id');
             $table->integer('project_id')->foreign('project_id')->references('id')->on('projects')->nullable();
             $table->integer('service_id')->foreign('service_id')->references('id')->on('services')->nullable();
-            $table->integer('compte_id');//->foreign('compte_id')->references('id')->on('comptes');
-            $table->integer('methode_transfert_id');//->foreign('methode_transfert_id')->references('id')->on('methode_transfert');
+            $table->integer('compte_id');
+            $table->integer('methode_transfert_id');
             $table->decimal('amount', 15, 2)->default(0);
             $table->date('expense_date');
             $table->string('file', 100)->nullable();
@@ -37,6 +37,6 @@ class EditExpenses extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('slices');
+        //
     }
 }

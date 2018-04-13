@@ -60,9 +60,9 @@
                                 </div>
                                 <div class="portlet-body">
 									
-									@empty($expense) <form action="/expenses" method="POST"> @endempty
+									@empty($expense) <form action="/expenses" method="POST" id="expenseForm"> @endempty
 									@isset($expense)
-										<form action="/expenses/{{ $expense->id }}" method="POST"> 
+										<form action="/expenses/{{ $expense->id }}" method="POST" id="expenseForm"> 
 										@method('PUT')
 									@endisset
 										@csrf
@@ -70,18 +70,18 @@
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label for="name">اسم المصروف <span>*</span></label>
-											<input type="text" name="name" id="name" class="form-control" placeholder=""> 
+										<input type="text" name="name" id="name" class="form-control" @isset($expense) value="{{ $expense->name }}" @endisset placeholder=""> 
 										</div>
 									</div>     
 																							
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
-											<label for="type">النوع <span>*</span></label>
-											<select name="type" id="type" class="form-control select2 select-hide">
+											<label for="type_id">النوع <span>*</span></label>
+											<select name="type_id" id="type_id" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
 												@isset($expenseTypes)
 													@foreach ($expenseTypes as $expenseType)
-														<option value="{{ $expenseType->id }}">{{ $expenseType->name }}</option>
+														<option value="{{ $expenseType->id }}"@isset($expense) {{ $expense->typeMatch($expenseType->id) ? 'selected="selected"' : '' }} @endisset>{{ $expenseType->name }}</option>
 													@endforeach
 												@endisset
 											</select>
@@ -91,7 +91,7 @@
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label>التفاصيل</label>
-											<textarea name="details" id="details" class="form-control" rows="5"></textarea>
+											<textarea name="details" id="details" class="form-control" rows="5">@isset($expense) {{$expense->details}} @endisset</textarea>
 										</div>
 									</div>
 									
@@ -100,10 +100,12 @@
 											<label for="reference_id">اسم المشروع/الخدمة <span>*</span></label>
 											<select name="reference_id" id="reference_id" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
+												@foreach ($projects as $project)
+													<option type="2" value="{{ $project->id }}" @isset($expense) {{ $expense->prjMatch($project->id) ? 'selected="selected"' : '' }} @endisset>{{ $project->name }}</option>
+												@endforeach
+												@foreach ($services as $service)
+													<option type="3" value="{{ $service->id }}" @isset($expense) {{ $expense->srvMatch($service->id) ? 'selected="selected"' : '' }} @endisset>{{ $service->name }}</option>
+												@endforeach
 											</select>
 										</div>
 									</div>
@@ -114,10 +116,11 @@
 											<label for="prop_id">صاحب المصروف <span>*</span></label>
 											<select name="prop_id" id="prop_id" class="form-control select2 ">
 												<option></option>
-												<option value="1">1</option>
-												<option value="2">2</option>
-												<option value="3">3</option>
-												<option value="4">4</option>
+												@isset($listProp)
+													@foreach ($listProp as $employee)
+														<option value="{{ $employee->id }}" @isset($expense) {{ $expense->empMatch($employee->id) ? 'selected="selected"' : '' }} @endisset>{{ $employee->name }}</option>
+													@endforeach
+												@endisset
 											</select>
 											<span class="input-group-btn btn-addon">
 												<button type="button" class="btn green" data-toggle="modal" data-target="#exampleModal">عرض البيانات</button>
@@ -133,7 +136,9 @@
 												<option>-- إختر --</option>
 												@isset($bancAcounts)
 													@foreach ($bancAcounts as $bancAcount)
-														<option value="{{ $bancAcount->id }}">{{ $bancAcount->bank_name }} - {{ $bancAcount->count_num }}</option>
+														<option value="{{ $bancAcount->id }}" @isset($expense) {{ $expense->acountMatch($bancAcount->id) ? 'selected="selected"' : '' }} @endisset>
+															{{ $bancAcount->bank_name }} - {{ $bancAcount->count_num }}
+														</option>
 													@endforeach
 												@endisset
 											</select>
@@ -147,7 +152,7 @@
 												<option>-- إختر --</option>
 												@isset($transferMethodes)
 													@foreach ($transferMethodes as $transferMethode)
-														<option value="{{ $transferMethode->id }}">{{ $transferMethode->name }}</option>
+														<option value="{{ $transferMethode->id }}" @isset($expense) {{ $expense->mTransMatch($transferMethode->id) ? 'selected="selected"' : '' }} @endisset>{{ $transferMethode->name }}</option>
 													@endforeach
 												@endisset
 											</select>
@@ -170,16 +175,16 @@
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label for="single10">إضافة نسبة <span>*</span></label>
-											<select id="single10" class="form-control select2 " multiple>
+											<select id="single10" class="form-control select2 " name="expense_rates[]" id="expense_rates[]" multiple="multiple">
 												<option>-- إختر --</option>
 												@isset($rates)
 													@foreach ($rates as $rate)
-														<option value="{{ $rate->id }}">{{ $rate->name }}</option>
+														<option value="{{ $rate->id }}" @isset($expense) {{ (in_array($rate->id, $selected)) ? ' selected="selected"' : '' }} @endisset>{{ $rate->name }}</option>
 													@endforeach
 												@endisset
 											</select>
 										</div>
-									</div>                               
+									</div>
 																		
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
@@ -196,7 +201,7 @@
 											<label for="single">التاريخ <span>*</span></label>
 											<div class="input-icon">
 												<i class="fa fa-calendar font-green "></i>
-											<input type="text" class="form-control date" name="expense_date" id="expense_date" placeholder="">
+												<input type="text" class="form-control date" name="expense_date" id="expense_date" @isset($expense) value="{{ $expense->expense_date }}" @endisset placeholder="">
 											</div>
 										</div>
 									</div>
@@ -209,12 +214,12 @@
 													<div class="input-group input-large">
 														<div class="form-control uneditable-input input-fixed input-medium" data-trigger="fileinput">
 															<i class="fa fa-file fileinput-exists"></i>&nbsp;
-															<span class="fileinput-filename"> </span>
+															<span class="fileinput-filename"> @isset($expense->file) {{ $expense->file }} @endisset </span>
 														</div>
 														<span class="input-group-addon btn default btn-file">
 															<span class="fileinput-new"> إختر المرفق </span>
 															<span class="fileinput-exists"> تغيير </span>
-															<input type="file" name="..."> </span>
+															<input type="file" name="..." @isset($expense->file) value="{{ $expense->file }}" @endisset> </span>
 														<a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> حذف </a>
 													</div>
 												</div>
@@ -225,7 +230,7 @@
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label>ملاحظات</label>
-											<textarea name="remarques" id="remarques" class="form-control" rows="5"></textarea>
+											<textarea name="remarques" id="remarques" class="form-control" rows="5">@isset($expense) {{ $expense->remarques }} @endisset</textarea>
 										</div>
 									</div>
 									
@@ -305,6 +310,43 @@
 				language: "ar",
 				format: "yyyy-mm-dd"
 			});
+			
+			$(function() {
+				var reference_id = $('#reference_id option').clone();
+				$('#type_id').on('change', function() {
+					var val = this.value;
+
+					$('#reference_id').html( 
+						reference_id.filter(function() {
+							if (typeof(this.attributes.type) == "undefined")
+								return false;
+							if(val < 4)
+								return this.attributes.type.value == val;
+							return true;
+						})
+					);
+				})
+				.change();
+			});
+			(function($) {
+				$(document).ready(function() {
+					$('select#reference_id').bind('change', function() {
+					// Fetch selected item's data element value
+					var optionId = $(this).children(':selected').attr('type');
+					
+					// Remove any existing hidden input
+					$('input[name="hiden_type"').remove();
+					
+					// Append new hidden input element
+					$('<input>').attr({
+						type: 'hidden',
+						id: 'hiden_type',
+						name: 'hiden_type',
+						value: optionId
+					}).appendTo('form#expenseForm');
+					});
+				});
+			})(jQuery);
 		</script>
     </body>
 </html>

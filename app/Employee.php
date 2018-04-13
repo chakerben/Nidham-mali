@@ -11,6 +11,26 @@ class Employee extends Model
     protected $fillable = ['name', 'role_id', 'details', 'transfer_method_id', 'file'];
     protected $dates = ['deleted_at'];
 
+    public function PaypalAcounts()
+    {
+        return $this->hasMany('App\EmployeePaypalAcount');
+    }
+
+    public function BankAcounts()
+    {
+        return $this->hasMany('App\EmployeeBankAcount');
+    }
+
+    public function OtherTransferMethods()
+    {
+        return $this->hasMany('App\EmployeeOtherTransferMethod');
+    }
+
+    public function Expenses()
+    {
+        return $this->hasMany('App\Expense');
+    }
+
     public function cliMatch($id)
     {
         return $id === $this->role_id;

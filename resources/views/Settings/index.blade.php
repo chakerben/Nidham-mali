@@ -502,599 +502,292 @@
 											</div>
 											
 											<div class="tab-pane" id="tab_3">
+												@isset($transferToEdit)
+													<form action="/transfer/{{$transferToEdit->id}}" method="POST" id="transfersForm">
+														@method('PUT')
+												@endisset
+												@empty($transferToEdit)
+													<form action="/transfer" method="POST" id="transfersForm">
+												@endempty
+													@csrf
+													<div class="row">
+														<div class="col-md-10 col-md-offset-1 col-xs-12">
+															<div class="col-md-6 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-3 no-margin margin-top-5">حول من بنك <span>*</span></label>
+																	<div class="col-md-9">
+																		<select class="form-control select2" name="banc_from" id="banc_from">
+																			<option></option>
+																			@foreach ($banks as $bank)
+																				<option value="{{ $bank->bank_name }}" @isset($transferToEdit) {{ $transferToEdit->bankFromMatch($bank->bank_name) ? 'selected="selected"' : '' }} @endisset>{{ $bank->bank_name }}</option>
+																			@endforeach
+																		</select>
+																	</div>
+																	<div class="clearfix"></div>
+																</div>
+															</div>
+															<div class="col-md-6 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-3 no-margin margin-top-5">الى بنك <span>*</span></label>
+																	<div class="col-md-9">
+																		<select class="form-control select2 " name="banc_to" id="banc_to">
+																			<option></option>
+																			@foreach ($banks as $bank)
+																				<option value="{{ $bank->bank_name }}" @isset($transferToEdit) {{ $transferToEdit->bankToMatch($bank->bank_name) ? 'selected="selected"' : '' }} @endisset>{{ $bank->bank_name }}</option>
+																			@endforeach
+																		</select>
+																	</div>
+																	<div class="clearfix"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="col-md-10 col-md-offset-1 col-xs-12">
+															<div class="col-md-6 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-3 no-margin margin-top-5">رقم حسابه <span>*</span></label>
+																	<div class="col-md-9">
+																		<select class="form-control select2" name="banc_acount_from_id" id="banc_acount_from_id">
+																			<option></option>
+																			@foreach ($acounts as $acount)
+																				<option value="{{ $acount->id }}" bank="{{ $acount->bank_name }}" @isset($transferToEdit) {{ $transferToEdit->bankAcountFromMatch($acount->id) ? 'selected="selected"' : '' }} @endisset>{{ $acount->count_num }}</option>
+																			@endforeach
+																		</select>
+																	</div>
+																	<div class="clearfix"></div>
+																</div>
+															</div>
+															<div class="col-md-6 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-3 no-margin margin-top-5">رقم حسابه <span>*</span></label>
+																	<div class="col-md-9">
+																		<select class="form-control select2" name="banc_acount_to_id" id="banc_acount_to_id">
+																			<option></option>
+																			@foreach ($acounts as $acount)
+																				<option value="{{ $acount->id }}" bank="{{ $acount->bank_name }}" @isset($transferToEdit) {{ $transferToEdit->bankAcountToMatch($acount->id) ? 'selected="selected"' : '' }} @endisset>{{ $acount->count_num }}</option>
+																			@endforeach
+																		</select>
+																	</div>
+																	<div class="clearfix"></div>
+																</div>
+															</div>
+														</div>
+													</div>
+													
+													<div class="row">
+														<div class="col-md-6 col-md-offset-3 col-xs-12">
+															<hr>
+														</div>
+													</div>
 												
-                                           	<div class="row">
-												<div class="col-md-10 col-md-offset-1 col-xs-12">
-													<div class="col-md-6 col-xs-12">
-														<div class="form-group">
-															<label class="control-label col-md-3 no-margin margin-top-5">حول من بنك <span>*</span></label>
-															<div class="col-md-9">
-																<select class="form-control select2 ">
-																	<option></option>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																</select>
+													<div class="row">
+														<div class="col-md-10 col-md-offset-1 col-xs-12">
+															<div class="col-md-4 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-4 no-margin margin-top-5">مبلغ قدره <span>*</span></label>
+																	<div class="col-md-8">
+																		<div class="input-icon">
+																			<i class="fa fa-money font-green "></i>
+																			<input type="text" class="form-control" name="transfer_amount" id="transfer_amount" value="@isset($transferToEdit) {{ $transferToEdit->transfer_amount }} @endisset @empty($transferToEdit) 0 @endempty"> 
+																		</div>
+																	</div>
+																	<div class="clearfix"></div>
+																</div>
 															</div>
-														<div class="clearfix"></div>
+
+															<div class="col-md-4 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-5 no-margin margin-top-5">اقتطاع نسبه </label>
+																	<div class="col-md-7">
+																		<select class="form-control select2 select-hide" style="width: 100%;" name="percent_id" id="percent_id">
+																			<option rate="0">-- إختر --</option>
+																			@foreach ($rates as $rate)
+																				<option value="{{ $rate->id }}" rate="{{$rate->value}}" @isset($transferToEdit) {{ $transferToEdit->rateMatch($rate->id) ? 'selected="selected"' : '' }} @endisset>{{ $rate->name }}</option>
+																			@endforeach
+																		</select>
+																	</div>
+																<div class="clearfix"></div>
+																</div>
+															</div>
+
+															<div class="col-md-4 col-xs-12">
+																<div class="form-group">
+																	<label class="control-label col-md-5 no-margin margin-top-5">صافى المبلغ </label>
+																	<div class="col-md-7">
+																		<div class="input-icon">
+																			<i class="fa fa-money font-green "></i>
+																			<input type="text" class="form-control" name="total_amount" id="total_amount" readonly value="@isset($transferToEdit) {{ $transferToEdit->total_amount }} @endisset @empty($transferToEdit) 0 @endempty"> 
+																		</div>
+																	</div>
+																<div class="clearfix"></div>
+																</div>
+															</div>
 														</div>
 													</div>
-													<div class="col-md-6 col-xs-12">
-														<div class="form-group">
-															<label class="control-label col-md-3 no-margin margin-top-5">الى بنك <span>*</span></label>
-															<div class="col-md-9">
-																<select class="form-control select2 ">
-																	<option></option>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																</select>
-															</div>
-														<div class="clearfix"></div>
+
+													<div class="row">
+														<div class="col-md-6 col-md-offset-3 col-xs-12">
+															<hr>
 														</div>
 													</div>
-												</div>
-                                           	</div>
-                                           	<div class="row">
-												<div class="col-md-10 col-md-offset-1 col-xs-12">
-													<div class="col-md-6 col-xs-12">
+
+													<div class="col-md-6 col-md-offset-3 col-sm-12">
 														<div class="form-group">
-															<label class="control-label col-md-3 no-margin margin-top-5">رقم حسابه <span>*</span></label>
+															<label class="control-label col-md-3 no-margin margin-top-5">مرفق </label>
 															<div class="col-md-9">
-																<select class="form-control select2 ">
-																	<option></option>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																</select>
-															</div>
-														<div class="clearfix"></div>
-														</div>
-													</div>
-													<div class="col-md-6 col-xs-12">
-														<div class="form-group">
-															<label class="control-label col-md-3 no-margin margin-top-5">رقم حسابه <span>*</span></label>
-															<div class="col-md-9">
-																<select class="form-control select2 ">
-																	<option></option>
-																	<option value="1">1</option>
-																	<option value="2">2</option>
-																	<option value="3">3</option>
-																	<option value="4">4</option>
-																</select>
+																<div class="fileinput fileinput-new" data-provides="fileinput">
+																<div class="input-group input-large">
+																	<div class="form-control uneditable-input input-fixed input-medium" data-trigger="fileinput">
+																		<i class="fa fa-file fileinput-exists"></i>&nbsp;
+																		<span class="fileinput-filename"> @isset($transferToEdit->file) value="{{ $transferToEdit->file }}" @endisset </span>
+																	</div>
+																	<span class="input-group-addon btn default btn-file">
+																		<span class="fileinput-new"> إختر المرفق </span>
+																		<span class="fileinput-exists"> تغيير </span>
+																		<input type="file" name="..." @isset($transferToEdit->file) value="{{ $transferToEdit->file }}" @endisset> </span>
+																	<a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> حذف </a>
+																</div>
+																</div>
 															</div>
 															<div class="clearfix"></div>
 														</div>
 													</div>
-												</div>
-											</div>
-											   
-                                           	<div class="row">
-												<div class="col-md-6 col-md-offset-3 col-xs-12">
-													<hr>
-												</div>
-                                           	</div>
-                                           
-                                           <div class="row">
-                                           <div class="col-md-10 col-md-offset-1 col-xs-12">
-                                           	<div class="col-md-4 col-xs-12">
-                                           		<div class="form-group">
-													<label class="control-label col-md-4 no-margin margin-top-5">مبلغ قدره <span>*</span></label>
-													<div class="col-md-8">
-														<div class="input-icon">
-															<i class="fa fa-money font-green "></i>
-															<input type="text" class="form-control" placeholder=""> 
+
+													<div class="row">
+														<div class="col-md-6 col-md-offset-3 col-sm-12 text-center">
+															<a href="javascript:;" class="btn btn-lg green" id="transfersFormSubmit">
+																<i class="fa fa-check"></i> حـول</a>
 														</div>
 													</div>
-                                          		<div class="clearfix"></div>
-												</div>
-                                           	</div>
-                                           	<div class="col-md-4 col-xs-12">
-                                           		<div class="form-group">
-													<label class="control-label col-md-5 no-margin margin-top-5">اقتطاع نسبه </label>
-													<div class="col-md-7">
-														<select class="form-control select2 select-hide" style="width: 100%;">
-															<option>-- إختر --</option>
-															<option value="1">1</option>
-															<option value="2">2</option>
-															<option value="3">3</option>
-															<option value="4">4</option>
-														</select>
-													</div>
-                                          		<div class="clearfix"></div>
-												</div>
-                                           	</div>
-                                           	<div class="col-md-4 col-xs-12">
-                                           		<div class="form-group">
-													<label class="control-label col-md-5 no-margin margin-top-5">صافى المبلغ </label>
-													<div class="col-md-7">
-														<div class="input-icon">
-															<i class="fa fa-money font-green "></i>
-															<input type="text" class="form-control" placeholder="" disabled> 
-														</div>
-													</div>
-                                          		<div class="clearfix"></div>
-												</div>
-                                           	</div>
-                                           	
-                                           </div>
-                                           	                        
-                                              
-                                      
-                                           </div>
-                                           
-                                           
-                                           <div class="row">
-                                           	<div class="col-md-6 col-md-offset-3 col-xs-12">
-                                           		<hr>
-                                           	</div>
-                                           </div>
-									
-									
-											 <div class="col-md-6 col-md-offset-3 col-sm-12">
-											    <div class="form-group">
-													<label class="control-label col-md-3 no-margin margin-top-5">مرفق </label>
-													<div class="col-md-9">
-														<div class="fileinput fileinput-new" data-provides="fileinput">
-														<div class="input-group input-large">
-															<div class="form-control uneditable-input input-fixed input-medium" data-trigger="fileinput">
-																<i class="fa fa-file fileinput-exists"></i>&nbsp;
-																<span class="fileinput-filename"> </span>
-															</div>
-															<span class="input-group-addon btn default btn-file">
-																<span class="fileinput-new"> إختر المرفق </span>
-																<span class="fileinput-exists"> تغيير </span>
-																<input type="file" name="..."> </span>
-															<a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> حذف </a>
-														</div>
-														</div>
-													</div>
-                                          			<div class="clearfix"></div>
-												</div>
-											 </div> 
-                                           
-													 
-												<div class="row">
-													<div class="col-md-6 col-md-offset-3 col-sm-12 text-center">
-														<a href="javascript:;" class="btn btn-lg green">
-															<i class="fa fa-check"></i> حـول</a>
-													</div>
-												</div>
-                    
-											<hr>
+												</form>
+
+												<hr>
 
 											<h4 class="text-center font-purple margin-bottom-5 no-margin">
 												التحويلات السابقة
 											</h4>
                                           
-                                          <div class="row">
-										   <div class="col-md-12 text-center"><hr style="width: 20%;margin: 5px auto 20px auto;"></div>
-                                          </div>
+											<div class="row">
+												<div class="col-md-12 text-center"><hr style="width: 20%;margin: 5px auto 20px auto;"></div>
+											</div>
                                           
-                                          <div class="row">
-                                   
-                                   
-										   <div class="col-md-3">
+											<div class="row">
+												<div class="col-md-3">
+													<div class="marketplace__content">  
+														<div class="marketplace__aside">
+															<div class="filters__container filters__container--vertical filters__container--collapsed">
+																<form class="filters__form nomargin">
+																	<h3 class="marketplace__title no-margin">
+																		أدوات التصفية<i class="mdi mdi-chevron-down mdi-24px"></i>
+																	</h3>
+																	<div class="filters filters--vertical">
+																		<div class="filters__section filters__section--category filters__section--vertical">
+																			<div class="filters__section-content">
+																				<div>
+																					<input id="checkbox-1" class="checkbox-style" name="checkbox-1" type="checkbox" checked>
+																					<label for="checkbox-1" class="checkbox-style-3-label">
+																						اى وقت
+																					</label>
+																				</div>
 
-											<div class="marketplace__content">  
-										  <div class="marketplace__aside">
-										  <div class="filters__container filters__container--vertical filters__container--collapsed">
-										  <form class="filters__form nomargin">
-										  <h3 class="marketplace__title no-margin">
-										  أدوات التصفية<i class="mdi mdi-chevron-down mdi-24px"></i>
-										  </h3>
-										  <div class="filters filters--vertical">
-										  <div class="filters__section filters__section--category filters__section--vertical">
+																				<div class="col-md-12"> <hr> </div>
 
-										  
+																				<div>
+																					<input id="checkbox-10" class="checkbox-style" name="checkbox-10" type="checkbox">
+																					<label for="checkbox-10" class="checkbox-style-3-label">
+																					فترة محددة
+																					</label>
+																					<div class="col-md-12">
+																						<input type="text" class="form-control date" name="from" placeholder="من تاريخ">
+																					</div>
+																					<hr>
+																					<div class="col-md-12">
+																						<input type="text" class="form-control date" name="to" placeholder="إلى تاريخ">
+																					</div>
+																				</div>
+																				
+																				<div class="col-md-12"> <hr> </div>
+																				
+																				<div>
+																					<input id="checkbox-2" class="checkbox-style" name="checkbox-2" type="checkbox">
+																					<label for="checkbox-2" class="checkbox-style-3-label">
+																						جميع تحويلات بنك
+																					</label>
+																					<div class="col-md-12">
+																						<select class="form-control select2 " multiple>
+																							<option>-- إختر --</option>
+																							<option value="1">1</option>
+																							<option value="2">2</option>
+																							<option value="3">3</option>
+																							<option value="4">4</option>
+																						</select>
+																					</div>
+																				</div>
+																				
+																				<div class="clearfix"></div>
 
-										  <div class="filters__section-content">
-
-											<div>
-												<input id="checkbox-1" class="checkbox-style" name="checkbox-1" type="checkbox" checked>
-												<label for="checkbox-1" class="checkbox-style-3-label">
-												 اى وقت
-												</label>
-											</div>
-
-											<div class="col-md-12">
-												<hr>
-											</div>
-
-											<div>
-												<input id="checkbox-10" class="checkbox-style" name="checkbox-10" type="checkbox">
-												<label for="checkbox-10" class="checkbox-style-3-label">
-												 فترة محددة
-												</label>
-												<div class="col-md-12">
-													<input type="text" class="form-control date" name="from" placeholder="من تاريخ">
+																				<div class="text-center margin-top-30">
+																					<button type="button" class="btn green">عـرض</button>
+																				</div>
+																			</div>
+																		</div>
+																	</div>
+																</form>
+															</div>
+														</div>
+													</div>
 												</div>
-												<hr>
-												<div class="col-md-12">
-													<input type="text" class="form-control date" name="to" placeholder="إلى تاريخ">
-												</div>
-											</div>
-
-
-											<div class="col-md-12">
-												<hr>
-											</div>
+													
+												<div class="line visible-xs-block"></div>
 											
-
-											<div>
-												<input id="checkbox-2" class="checkbox-style" name="checkbox-2" type="checkbox">
-												<label for="checkbox-2" class="checkbox-style-3-label">
-												 جميع تحويلات بنك
-												</label>
-												<div class="col-md-12">
-												<select class="form-control select2 " multiple>
-													<option>-- إختر --</option>
-													<option value="1">1</option>
-													<option value="2">2</option>
-													<option value="3">3</option>
-													<option value="4">4</option>
-												</select>
+												<div class="col-md-9 clearfix">
+													<div class="table-responsive">
+														<table class="table table-striped table-bordered table-hover dt-responsive grd_view" width="100%" id="sample_1">
+															<thead>
+																<tr>
+																	<th class="desktop no-padding">م</th>
+																	<th class="min-phone-l">البنك المحول منه</th>
+																	<th class="min-phone-l">البنك المحول اليه</th>
+																	<th class="desktop">النسبة</th>
+																	<th class="desktop">المبلغ</th>
+																	<th class="desktop">التاريخ</th>
+																	<th class="desktop">التفاصيل</th>
+																</tr>
+															</thead>
+															<tbody>
+																@foreach ($transfers as $transfer)
+																<tr>
+																	<td>{{$loop->iteration}}</td>
+																	<td>{{$transfer->AcountFrom->bank_name}}</td>
+																	<td>{{$transfer->AcountTo->bank_name}}</td>
+																	<td>{{$transfer->transfer_amount - $transfer->total_amount}} ريال</td>
+																	<td>{{$transfer->total_amount}} ريال</td>
+																	<td>{{$transfer->created_at}}</td>
+																	<td class="text-center">
+																		<div class="btn-group">
+																			<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
+																				<i class="fa fa-angle-down"></i>
+																			</a>
+																			<ul class="dropdown-menu pull-right">
+																				<li><a href="{{ route('transfer.edit', $rate->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
+																				<li><a href="{{ route('transfer.edit', $rate->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
+																				<li><a href="#basic" class="font-red" data-toggle="modal" id="{{ "transfer/".$transfer->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
+																				<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+																			</ul>
+																		</div>
+																	</td>
+																</tr>
+																@endforeach
+															</tbody>
+														</table>
+													</div>
 												</div>
-											</div>
 											
-											<div class="clearfix"></div>
-
-											<div class="text-center margin-top-30">
-												<button type="button" class="btn green">عـرض</button>
-											</div>
-
-										  </div>
-										  </div>
-
-										  </div></form></div></div>
-											</div>
-
-												</div>
-                                  
-                                  
-										<div class="line visible-xs-block"></div>
-										
-										<div class="col-md-9 clearfix">
-											<div class="table-responsive">
-												<table class="table table-striped table-bordered table-hover dt-responsive grd_view" width="100%" id="sample_1">
-													<thead>
-														<tr>
-															<th class="desktop no-padding">م</th>
-															<th class="min-phone-l">البنك المحول منه</th>
-															<th class="min-phone-l">البنك المحول اليه</th>
-															<th class="desktop">النسبة</th>
-															<th class="desktop">المبلغ</th>
-															<th class="desktop">التاريخ</th>
-															<th class="desktop">التفاصيل</th>
-														</tr>
-													</thead>
-													<tbody>
-														<tr>
-															<td>1</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>2</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>3</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>4</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>5</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>6</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>7</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>8</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>9</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>10</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>11</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>12</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>13</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>14</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<td>15</td>
-															<td>بنك الراجحى</td>
-															<td>بنك مصر</td>
-															<td>20 ريال</td>
-															<td>1000 ريال</td>
-															<td>15 يناير 2015</td>
-															<td class="text-center">
-																<div class="btn-group">
-																	<a class="btn green-haze btn-outline btn-sm" href="javascript:;" data-toggle="dropdown"  data-close-others="true"> إخـتر الأمـر
-																		<i class="fa fa-angle-down"></i>
-																	</a>
-																	<ul class="dropdown-menu pull-right">
-																		<li><a href="#" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																		<li><a href="#" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																		<li><a href="#basic" class="font-red" data-toggle="modal"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
-																	</ul>
-																</div>
-															</td>
-														</tr>
-													</tbody>
-												</table>
+												<div class="clearfix"></div>
 											</div>
 										</div>
-										
-							   			<div class="clearfix"></div>
-                                    </div>
-									</div>
 
                                     <div class="tab-pane" id="tab_4">
 										<div class="form-horizontal form-bordered">
@@ -1761,7 +1454,7 @@
 		</div>
 		
 		@include('common.scripts')
-        
+		
         <script>
 			$(document).on('ready', function() {
 				// Without Search
@@ -1788,6 +1481,10 @@
 			$( "#ratesFormSubmit" ).click(function() {
 				$( "#ratesForm" ).submit();
 			});
+			//Submitting the transfer form
+			$( "#transfersFormSubmit" ).click(function() {
+				$( "#transfersForm" ).submit();
+			});
 
 			//update delete form on modal
 			$('#basic').on('show.bs.modal', function(e) {
@@ -1795,6 +1492,49 @@
 					delUrl = e.relatedTarget.id;
 				$modal.find('#deleteForm').attr('action', delUrl);
 			})
+
+			$(function() {
+				var from_acounts = $('#banc_acount_from_id option').clone();
+				$('#banc_from').on('change', function() {
+					var val = this.value;
+					$('#banc_acount_from_id').html( 
+						from_acounts.filter(function() {
+							if (typeof(this.attributes.bank) == "undefined")
+								return false
+							return this.attributes.bank.value === val; 
+						})
+					);
+				})
+				.change();
+			});
+			$(function() {
+				var to_acounts = $('#banc_acount_to_id option').clone();
+				$('#banc_to').on('change', function() {
+					var val = this.value;
+					$('#banc_acount_to_id').html( 
+						to_acounts.filter(function() {
+							if (typeof(this.attributes.bank) == "undefined")
+								return false
+							return this.attributes.bank.value === val; 
+						})
+					);
+				})
+				.change();
+			});
+
+			$('#transfer_amount').on('input', function(){
+				var T = parseInt($(this).val());
+				var R = parseInt($('#percent_id option:selected').attr('rate'));
+				T -= (T/100)*R ;
+				$('#total_amount').val(T).attr('value', T);
+			});
+
+			$('#percent_id').on('change', function() {
+				var T = parseInt($('#transfer_amount').val());
+				var R = parseInt($('#percent_id option:selected').attr('rate'));
+				T -= (T/100)*R ;
+				$('#total_amount').val(T).attr('value', T);
+			});
 		</script>
     </body>
 </html>

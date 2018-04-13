@@ -15,8 +15,6 @@ class UserController extends Controller
 
     public function show($userId)
     {
-        //$user = User::findOrFail($userId);
-        //return view('Users.index');
         return redirect()->route('allUsers');
     }
 
@@ -28,8 +26,14 @@ class UserController extends Controller
     public function store()
     {
         $user = User::create([
-            'name' => input::get('name')
+            'name' => input::get('name'),
+            'email' => input::get('email'),
+            'phone' => input::get('phone'),
+            'password' => input::get('password'),
+            'description' => input::get('description'),
+            'photo' => input::get('___')
             ]);
+            //dd($user);
             return redirect()->route('allUsers');
     }
 
@@ -42,9 +46,13 @@ class UserController extends Controller
     public function update($userId)
     {
         $user = User::findOrFail($userId);
-        $file = input::get('___');
+        $photo = input::get('___');
         $user->fill([
-            'name' => input::get('name')
+            'name' => input::get('name'),
+            'email' => input::get('email'),
+            'phone' => input::get('phone'),
+            'description' => input::get('description'),
+            'photo' => (is_null($photo) || empty($photo) || strlen($photo)) ? $user->photo : $photo
             ]);
         $user->save();
         return redirect()->route('allUsers');
