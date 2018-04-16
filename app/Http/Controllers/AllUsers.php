@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 
 class AllUsers extends Controller
 {
+    public function __construct() { $this->middleware('auth'); }
+
     public function index () {
         $listCli = Client::select('id', 'name', 'updated_at')->get();
         foreach ($listCli as $cli){

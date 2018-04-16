@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class AllProjectsAndServices extends Controller
 {
+    public function __construct() { $this->middleware('auth'); }
+
     public function index () {
         $listPrj = Project::select('id', 'name', 'finished', 'updated_at', 'client_id')->get();
         foreach ($listPrj as $prj){

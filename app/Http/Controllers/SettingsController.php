@@ -9,14 +9,18 @@ use App\Transfer;
 use App\Role;
 use App\Rate;
 use App\BancAcount;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
+    public function __construct() { $this->middleware('auth'); }
+
     public function index($rate = false)
     {
+        //$this->canDo("ExpD");
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -44,14 +48,16 @@ class SettingsController extends Controller
 
     public function setSetting()
     {
-        $inputs = Input::except('_token');
-        foreach ($inputs as $key => $value){
-            $setting = Settings::find($key);
-            if ($setting === null) {
-                $setting = Settings::create(['name' => $key, 'value' =>  $value]);
-            } else {
-                $setting->fill(['value' => $value]);
-                $setting->save();
+        if($this->canDo("SetAg") || $this->canDo("SetUg")){
+            $inputs = Input::except('_token');
+            foreach ($inputs as $key => $value){
+                $setting = Settings::find($key);
+                if ($setting === null) {
+                    $setting = Settings::create(['name' => $key, 'value' =>  $value]);
+                } else {
+                    $setting->fill(['value' => $value]);
+                    $setting->save();
+                }
             }
         }
         return redirect()->route('settings');
@@ -78,28 +84,29 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function createBankAcount()
-    {
-        $acount = BancAcount::create([
-            'bank_name' => input::get('bank_name'),
-            'count_num' => input::get('count_num'),
-            'init_amount' => input::get('init_amount'),
-            'total_amount' => input::get('init_amount'),
-            'iban' => input::get('iban'),
-            'percent_name' => input::get('percent_name'),
-            'percent_valu' => input::get('percent_valu')
-            ]);
-            
+    public function createBankAcount(){
+        if($this->canDo("SetAa")){
+            $acount = BancAcount::create([
+                'bank_name' => input::get('bank_name'),
+                'count_num' => input::get('count_num'),
+                'init_amount' => input::get('init_amount'),
+                'total_amount' => input::get('init_amount'),
+                'iban' => input::get('iban'),
+                'percent_name' => input::get('percent_name'),
+                'percent_valu' => input::get('percent_valu')
+                ]);
+            }
         return redirect()->route('settings');
     }
 
-    public function createRate()
-    {
-        $acount = Rate::create([
-            'name' => input::get('name'),
-            'value' => input::get('value'),
-            'remarques' => input::get('remarques')
-            ]);
+    public function createRate() {
+        if($this->canDo("SetAr")){
+            $acount = Rate::create([
+                'name' => input::get('name'),
+                'value' => input::get('value'),
+                'remarques' => input::get('remarques')
+                ]);
+        }
         return redirect()->route('settings');
     }
 
@@ -174,5 +181,11 @@ class SettingsController extends Controller
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
             "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates,
             "transfers" => $transfers, "banks" => $banks, "transferToEdit" => $transferToEdit]);
+    }
+
+    private function canDo($section){
+        $permissions = unserialize(Auth::user()->permissions)["SetPerms"];
+        //dd($permissions);
+        return $permissions["$section"];
     }
 }

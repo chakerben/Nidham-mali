@@ -11,9 +11,7 @@
 |
 */
 
-/*Route::GET('/', ['as' => 'home', function () {
-    return view('dashboard');
-}]);*/
+Auth::routes();
 
 Route::GET('/', 'dashboardController@index')->name('home');
 Route::GET('/allProjectsAndServices', 'allProjectsAndServices@index')->name('allProjectsAndServices');

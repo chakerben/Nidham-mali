@@ -7,52 +7,47 @@ use App\BancAcount;
 
 use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransferController extends Controller
 {
-    public function index()
-    {
-        return redirect()->route('settings');
-    }
+    public function __construct() { $this->middleware('auth'); }
 
-    public function show($transferId)
-    {
+    public function index() { return redirect()->route('settings'); }
+
+    public function show($transferId) {
         $transfer = Transfer::findOrFail($pransferId);
         dd($pransfer);
     }
 
-    public function create()
-    {
+    public function create() {
         return redirect()->route('settings');
     }
 
-    public function store()
-    {
-        $transfer = Transfer::create([
-            'banc_acount_from_id' => input::get('banc_acount_from_id'),
-            'banc_acount_to_id' => input::get('banc_acount_to_id'),
-            'transfer_amount' => input::get('transfer_amount'),
-            'percent_id' => input::get('percent_id'),
-            'total_amount' => input::get('total_amount'),
-            'file' => input::get('___')
-            ]);
-            
-        $transfer->AcountFrom->total_amount -= $transfer->total_amount;
-        $transfer->AcountFrom->save();
+    public function store() {
+        if($this->canDo("SetAt")){
+            $transfer = Transfer::create([
+                'banc_acount_from_id' => input::get('banc_acount_from_id'),
+                'banc_acount_to_id' => input::get('banc_acount_to_id'),
+                'transfer_amount' => input::get('transfer_amount'),
+                'percent_id' => input::get('percent_id'),
+                'total_amount' => input::get('total_amount'),
+                'file' => input::get('___')
+                ]);
+                
+            $transfer->AcountFrom->total_amount -= $transfer->total_amount;
+            $transfer->AcountFrom->save();
 
-        $transfer->AcountTo->total_amount += $transfer->total_amount;
-        $transfer->AcountTo->save();
-
+            $transfer->AcountTo->total_amount += $transfer->total_amount;
+            $transfer->AcountTo->save();
+        }
         return redirect()->route('settings');
     }
 
     public function edit($transferId)
-    {
-        return redirect()->route('editTransfer', ["transferId" => $transferId]);
-    }
+        { return redirect()->route('editTransfer', ["transferId" => $transferId]); }
 
-    public function update($transferId)
-    {
+    public function update($transferId) {
         $transfer = Transfer::findOrFail($transferId);
         /*
         $file = input::get('___');
@@ -69,8 +64,7 @@ class TransferController extends Controller
         return redirect()->route('settings');
     }
 
-    public function destroy($transferId)
-    {
+    public function destroy($transferId) {
         $transfer = Transfer::findOrFail($transferId);
 
         $transfer->AcountFrom->total_amount += $transfer->total_amount;
@@ -81,5 +75,10 @@ class TransferController extends Controller
 
         $transfer->delete();
         return redirect()->route('settings');
+    }
+
+    private function canDo($section){
+        $permissions = unserialize(Auth::user()->permissions)["SetPerms"];
+        return $permissions["$section"];
     }
 }
