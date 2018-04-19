@@ -18,21 +18,24 @@ class UserController extends Controller
 
     public function show($userId){ return redirect()->route('allUsers'); }
 
-    public function create(){
+    public function create() {
         if($this->canDo("UsrAu")){
             return view('Users.addUser', ["allPermissions" => $this->allPermissions()]);
         } else { return redirect()->route('allUsers'); }
     }
 
-    public function store() {
+    public function store(Request $request) {
         if($this->canDo("UsrAu")){
+            $photo = $request->file('photo')->getClientOriginalName();
+            $path = $request->file('photo')->storeAs('files/users', $photo);
+
             $user = User::create([
-                'name' => input::get('name'),
-                'email' => input::get('email'),
-                'phone' => input::get('phone'),
-                'password' => Hash::make(input::get('password')),
-                'description' => input::get('description'),
-                'photo' => input::get('___'),
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'password' => Hash::make($request->input('password')),
+                'description' => $request->input('description'),
+                'photo' => $photo,
                 'permissions' => serialize($this->allPermissions())
                 ]);
         }
@@ -46,15 +49,21 @@ class UserController extends Controller
         } else { return redirect()->route('allUsers'); }
     }
 
-    public function update($userId) {
+    public function update($userId, Request $request) {
         if($this->canDo("UsrUu")){
             $user = User::findOrFail($userId);
-            $photo = input::get('___');
+
+            $photo = "";
+            if(!is_null($request->file('photo'))){
+                $photo = $request->file('photo')->getClientOriginalName();
+                $path = $request->file('photo')->storeAs('files/users', $photo);
+            }
+            
             $user->fill([
-                'name' => input::get('name'),
-                'email' => input::get('email'),
-                'phone' => input::get('phone'),
-                'description' => input::get('description'),
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'phone' => $request->input('phone'),
+                'description' => $request->input('description'),
                 'photo' => (is_null($photo) || empty($photo) || strlen($photo)) ? $user->photo : $photo,
                 'permissions' => serialize($this->allPermissions())
                 ]);
@@ -71,15 +80,15 @@ class UserController extends Controller
         return redirect()->route('allUsers');
     }
 
-    private function getPermissions($prefix, $perms){
+    private function getPermissions($prefix, $perms, Request $request){
         $permissions = [];
         foreach($perms as $perm){
-            $permissions[$prefix.$perm] = input::get($prefix.$perm) == "on";
+            $permissions[$prefix.$perm] = $request->input($prefix.$perm) == "on";
         }        
         return $permissions;
     }
 
-    private function allPermissions(){
+    private function allPermissions() {
         $allPerms = [
             "PrjPerms" => $this->getPermissions('Prj', ['A', 'U', 'D', 'S', 'T']),
             "SrvPerms" => $this->getPermissions('Srv', ['A', 'U', 'D', 'S', 'T']),
@@ -91,7 +100,7 @@ class UserController extends Controller
         return $allPerms;
     }
 
-    private function canDo($section){
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["UsrPerms"];
         return $permissions["$section"];
     }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Project;
 use App\Client;
 use App\Tranche;
-use Illuminate\Support\Facades\Input as Input;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,28 +42,28 @@ class ProjectsController extends Controller
         }
     }
 
-    public function store(Request $request)
-    {
-        //$path = $request->file('avatar')->store('avatars');
-        //dd($path);
+    public function store(Request $request) {
         if($this->canDo("PrjA")){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/projects', $name);
+        
             $project = Project::create([
-                'name' => input::get('name'),
-                'begin_at' => input::get('begin_at'),
-                'end_at' => input::get('end_at'),
-                'details' => input::get('details'),
-                'client_id' => input::get('client_id'),
-                'cost' => input::get('cost'),
-                'remarques' => input::get('remarques'),
-                'file' => input::get('___')
+                'name' => $request->input('name'),
+                'begin_at' => $request->input('begin_at'),
+                'end_at' => $request->input('end_at'),
+                'details' => $request->input('details'),
+                'client_id' => $request->input('client_id'),
+                'cost' => $request->input('cost'),
+                'remarques' => $request->input('remarques'),
+                'file' => $name
                 ]);
 
-            $trNum = input::get('payment-num');
+            $trNum = $request->input('payment-num');
             for($i=1; $i<=$trNum; $i++)
             {
                 $tranche = Tranche::create([
-                    'amount' => input::get('tranche_'.$i.'_amount'),
-                    'date_tranche' => input::get('tranche_'.$i.'_date'),
+                    'amount' => $request->input('tranche_'.$i.'_amount'),
+                    'date_tranche' => $request->input('tranche_'.$i.'_date'),
                     'project_id' => $project->id
                 ]);
             }
@@ -71,8 +71,7 @@ class ProjectsController extends Controller
         return redirect()->route('allProjectsAndServices');
     }
 
-    public function edit($projectId)
-    {
+    public function edit($projectId) {
         if($this->canDo("PrjU")){
             $clients = Client::select('id', 'name')->get();
             $project = Project::findOrFail($projectId);
@@ -82,33 +81,38 @@ class ProjectsController extends Controller
         }
     }
 
-    public function update($projectId)
-    {
+    public function update($projectId, Request $request) {
         if($this->canDo("PrjU")){
             $project = Project::findOrFail($projectId);
-            $file = input::get('___');
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/projects', $name);
+            }
+
             $project->fill([
-                'name' => input::get('name'),
-                'begin_at' => input::get('begin_at'),
-                'end_at' => input::get('end_at'),
-                'details' => input::get('details'),
-                'client_id' => input::get('client_id'),
-                'cost' => input::get('cost'),
-                'remarques' => input::get('remarques'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $project->file : $file
+                'name' => $request->input('name'),
+                'begin_at' => $request->input('begin_at'),
+                'end_at' => $request->input('end_at'),
+                'details' => $request->input('details'),
+                'client_id' => $request->input('client_id'),
+                'cost' => $request->input('cost'),
+                'remarques' => $request->input('remarques'),
+                'file' => (is_null($name) || empty($name) || !strlen($name)) ? $project->file : $name
                 ]);
             $project->save();
 
             $count = $project->Tranches()->count();
             $prjTranches = $project->Tranches()->get();
-            $trNum = input::get('payment-num');
+            $trNum = $request->input('payment-num');
 
             if($trNum <= $count){
                 $project->Tranches()->delete();
                 for($i=1; $i<=$trNum; $i++){
                     $tranche = Tranche::create([
-                        'amount' => input::get('tranche_'.$i.'_amount'),
-                        'date_tranche' => input::get('tranche_'.$i.'_date'),
+                        'amount' => $request->input('tranche_'.$i.'_amount'),
+                        'date_tranche' => $request->input('tranche_'.$i.'_date'),
                         'project_id' => $project->id
                     ]);
                 }
@@ -116,16 +120,16 @@ class ProjectsController extends Controller
                 for($i=1; $i<=$count; $i++){
                     $tranche = $prjTranches[$i-1];
                     $tranche->fill([
-                        'amount' => input::get('tranche_'.$i.'_amount'),
-                        'date_tranche' => input::get('tranche_'.$i.'_date'),
+                        'amount' => $request->input('tranche_'.$i.'_amount'),
+                        'date_tranche' => $request->input('tranche_'.$i.'_date'),
                         'project_id' => $project->id
                     ]);
                     $tranche->save();
                 }
                 for($i=$count+1; $i<=$trNum; $i++){
                     $tranche = Tranche::create([
-                        'amount' => input::get('tranche_'.$i.'_amount'),
-                        'date_tranche' => input::get('tranche_'.$i.'_date'),
+                        'amount' => $request->input('tranche_'.$i.'_amount'),
+                        'date_tranche' => $request->input('tranche_'.$i.'_date'),
                         'project_id' => $project->id
                     ]);
                 }
@@ -134,8 +138,7 @@ class ProjectsController extends Controller
         return redirect()->route('allProjectsAndServices');
     }
 
-    public function destroy($projectId)
-    {
+    public function destroy($projectId) {
         if($this->canDo("PrjD")){
             $project = Project::findOrFail($projectId);
             $project->delete();
@@ -143,12 +146,12 @@ class ProjectsController extends Controller
         return redirect()->route('allProjectsAndServices');
     }
 
-    public function jsonProjectTranches($projectId){
+    public function jsonProjectTranches($projectId) {
         $project = Project::findOrFail($projectId);
         return $project->Tranches()->select('id', 'amount')->get()->toJson();
     }
 
-    private function canDo($section){
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["PrjPerms"];
         return $permissions["$section"];
     }

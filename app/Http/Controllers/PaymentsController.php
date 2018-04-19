@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Payment;
 use App\Project;
-use App\Tranche;
-use Illuminate\Support\Facades\Input as Input;
+use App\Client;
+//use App\Tranche;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,42 +16,44 @@ class PaymentsController extends Controller
 
     public function index() {
         $listPay = Payment::with('tranche.project.client')->get();
-        return view('Payments.index', ['listPay' => $listPay]);
+        $projects = Project::select('id', 'name')->get();
+        $clients = Client::select('id', 'name')->get();
+        return view('Payments.index', ['listPay' => $listPay, 'projects' => $projects, 'clients' => $clients]);
     }
 
-    public function show($paymentId)
-    {
+    public function show($paymentId) {
         if($this->canDo("PayS")){
             $payment = Payment::findOrFail($paymentId);
             return view('PaymentsAndServices.paymentDetails', ["payment" => $payment]);
         } else { return redirect()->route('payments.index'); }
     }
 
-    public function create()
-    {
+    public function create() {
         if($this->canDo("PayA")){
             $projects = Project::select('id', 'name')->get();
             return view('Payments.addPayment', ["projects" => $projects]);
         } else { return redirect()->route('payments.index'); }
     }
 
-    public function store()
-    {
+    public function store(Request $request) {
         if($this->canDo("PayA")){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/payments', $name);
+        
             $payment = Payment::create([
-                'amount' => input::get('amount'),
-                'type' => input::get('type'),
-                'date_payment' => input::get('date_payment'),
-                'file' => input::get('___'),
-                'chek_number' => input::get('chek_number'),
-                'paypal_acount' => input::get('paypal_acount'),
-                'bank_to_id' => input::get('bank_to_id'),
-                'tranche_id' => input::get('tranche_id'),
-                'bank_from_id' => input::get('bank_from_id'),
-                'person_transfer_id' => input::get('person_transfer_id')
+                'amount' => $request->input('amount'),
+                'type' => $request->input('type'),
+                'date_payment' => $request->input('date_payment'),
+                'file' => $name,
+                'chek_number' => $request->input('chek_number'),
+                'paypal_acount' => $request->input('paypal_acount'),
+                'bank_to_id' => $request->input('bank_to_id'),
+                'tranche_id' => $request->input('tranche_id'),
+                'bank_from_id' => $request->input('bank_from_id'),
+                'person_transfer_id' => $request->input('person_transfer_id')
                 ]);
                 
-            if (!input::get('restAmount')) {
+            if (!$request->input('restAmount')) {
                 $payment->tranche->payed = 1;
                 $payment->tranche->save();
             }
@@ -58,8 +61,7 @@ class PaymentsController extends Controller
         return redirect()->route('payments.index');
     }
 
-    public function edit($paymentId)
-    {
+    public function edit($paymentId) {
         if($this->canDo("PayU")){
             $projects = Project::select('id', 'name')->get();
             $payment = Payment::with('tranche.project.client')->findOrFail($paymentId);
@@ -67,27 +69,31 @@ class PaymentsController extends Controller
         } else { return redirect()->route('payments.index'); }
     }
 
-    public function update($paymentId)
-    {
+    public function update($paymentId, Request $request) {
         if($this->canDo("PayU")){
             $payment = Payment::findOrFail($paymentId);
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/payments', $name);
+            }
             
-            $file = input::get('___');
             $payment->fill([
-                'amount' => input::get('amount'),
-                'type' => input::get('type'),
-                'date_payment' => input::get('date_payment'),
-                'chek_number' => input::get('chek_number'),
-                'paypal_acount' => input::get('paypal_acount'),
-                'bank_to_id' => input::get('bank_to_id'),
-                'tranche_id' => input::get('tranche_id'),
-                'bank_from_id' => input::get('bank_from_id'),
-                'person_transfer_id' => input::get('person_transfer_id'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $payment->file : $file
+                'amount' => $request->input('amount'),
+                'type' => $request->input('type'),
+                'date_payment' => $request->input('date_payment'),
+                'chek_number' => $request->input('chek_number'),
+                'paypal_acount' => $request->input('paypal_acount'),
+                'bank_to_id' => $request->input('bank_to_id'),
+                'tranche_id' => $request->input('tranche_id'),
+                'bank_from_id' => $request->input('bank_from_id'),
+                'person_transfer_id' => $request->input('person_transfer_id'),
+                'file' => (is_null($name) || empty($name) || strlen($name)) ? $payment->file : $name
                 ]);
             $payment->save();
 
-            if (!input::get('restAmount')) {
+            if (!$request->input('restAmount')) {
                 $payment->tranche->payed = 1;
                 $payment->tranche->save();
             }
@@ -95,8 +101,7 @@ class PaymentsController extends Controller
         return redirect()->route('payments.index');
     }
 
-    public function destroy($paymentId)
-    {
+    public function destroy($paymentId) {
         if($this->canDo("PayD")){
             $payment = Payment::findOrFail($paymentId);
             $payment->delete();
@@ -104,7 +109,7 @@ class PaymentsController extends Controller
         }
     }
 
-    private function canDo($section){
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["PayPerms"];
         return $permissions["$section"];
     }

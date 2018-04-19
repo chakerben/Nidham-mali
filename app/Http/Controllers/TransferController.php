@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Transfer;
 use App\BancAcount;
 
-use Illuminate\Support\Facades\Input as Input;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -24,15 +24,18 @@ class TransferController extends Controller
         return redirect()->route('settings');
     }
 
-    public function store() {
+    public function store(Request $request) {
         if($this->canDo("SetAt")){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/transfers', $name);
+
             $transfer = Transfer::create([
-                'banc_acount_from_id' => input::get('banc_acount_from_id'),
-                'banc_acount_to_id' => input::get('banc_acount_to_id'),
-                'transfer_amount' => input::get('transfer_amount'),
-                'percent_id' => input::get('percent_id'),
-                'total_amount' => input::get('total_amount'),
-                'file' => input::get('___')
+                'banc_acount_from_id' => $request->input('banc_acount_from_id'),
+                'banc_acount_to_id' => $request->input('banc_acount_to_id'),
+                'transfer_amount' => $request->input('transfer_amount'),
+                'percent_id' => $request->input('percent_id'),
+                'total_amount' => $request->input('total_amount'),
+                'file' => $name
                 ]);
                 
             $transfer->AcountFrom->total_amount -= $transfer->total_amount;
@@ -47,20 +50,15 @@ class TransferController extends Controller
     public function edit($transferId)
         { return redirect()->route('editTransfer', ["transferId" => $transferId]); }
 
-    public function update($transferId) {
+    public function update($transferId, Request $request) {
         $transfer = Transfer::findOrFail($transferId);
-        /*
-        $file = input::get('___');
-        $transfer->fill([
-            'banc_acount_from_id' => input::get('banc_acount_from_id'),
-            'banc_acount_to_id' => input::get('banc_acount_to_id'),
-            'transfer_amount' => input::get('transfer_amount'),
-            'percent_id' => input::get('percent_id'),
-            'total_amount' => input::get('total_amount'),
-            'file' => (is_null($file) || empty($file) || strlen($file)) ? $transfer->file : $file
-            ]);
-        $transfer->save();
-        */
+
+        $name = "";
+        if(!is_null($request->file('upload'))){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/transfers', $name);
+        }
+
         return redirect()->route('settings');
     }
 

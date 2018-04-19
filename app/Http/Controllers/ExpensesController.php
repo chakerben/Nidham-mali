@@ -10,7 +10,8 @@ use App\Service;
 use App\TransferMethode;
 use App\Rate;
 use App\Employee;
-use Illuminate\Support\Facades\Input as Input;
+use App\Client;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,11 +21,13 @@ class ExpensesController extends Controller
 
     public function index(){
         $listExp = Expense::with(['type', 'Project.client', 'Service'])->get();
-        return view('Expenses.index', ['listExp' => $listExp]);
+        $projects = Project::select('id', 'name')->get();
+        $clients = Client::select('id', 'name')->get();
+        $expenseTypes = ExpenseType::select('id', 'name')->get();
+        return view('Expenses.index', ['listExp' => $listExp, 'projects' => $projects, 'clients' => $clients, 'expenseTypes' => $expenseTypes]);
     }
 
-    public function show($expenseId)
-    {
+    public function show($expenseId) {
         if($this->canDo("ExpS")){
             $projects = Project::select('id', 'name')->get();
             $services = Service::select('id', 'name')->get();
@@ -42,8 +45,7 @@ class ExpensesController extends Controller
         } else { return redirect()->route('expenses.index'); }
     }
 
-    public function create()
-    {
+    public function create() {
         if($this->canDo("ExpA")){
             $projects = Project::select('id', 'name')->get();
             $services = Service::select('id', 'name')->get();
@@ -58,32 +60,32 @@ class ExpensesController extends Controller
         } else { return redirect()->route('expenses.index'); }
     }
 
-    public function store()
-    {
+    public function store(Request $request) {
         if($this->canDo("ExpA")){
-            $hType = input::get('hiden_type');
+            $hType = $request->input('hiden_type');
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/expenses', $name);
             
             $expense = Expense::create([
-                'name' => input::get('name'),
-                'type_id' => input::get('type_id'),
-                'details' => input::get('details'),
-                'employee_id' => input::get('prop_id'),
-                'project_id' => ($hType == 2) ? input::get('reference_id') : null,
-                'service_id' => ($hType == 3) ? input::get('reference_id') : null,
-                'compte_id' => input::get('compte_id'),
-                'methode_transfert_id' => input::get('methode_transfert_id'),
-                'amount' => input::get('amount'),
-                'expense_date' => input::get('expense_date'),
-                'file' => input::get('___'),
-                'remarques' => input::get('remarques')
+                'name' => $request->input('name'),
+                'type_id' => $request->input('type_id'),
+                'details' => $request->input('details'),
+                'employee_id' => $request->input('prop_id'),
+                'project_id' => ($hType == 2) ? $request->input('reference_id') : null,
+                'service_id' => ($hType == 3) ? $request->input('reference_id') : null,
+                'compte_id' => $request->input('compte_id'),
+                'methode_transfert_id' => $request->input('methode_transfert_id'),
+                'amount' => $request->input('amount'),
+                'expense_date' => $request->input('expense_date'),
+                'file' => $name,
+                'remarques' => $request->input('remarques')
                 ]);
-            $expense->Rates()->sync(array_values(input::get('expense_rates')));
+            $expense->Rates()->sync(array_values($request->input('expense_rates')));
         }
         return redirect()->route('expenses.index');
     }
 
-    public function edit($expenseId)
-    {
+    public function edit($expenseId) {
         if($this->canDo("ExpU")){
             $projects = Project::select('id', 'name')->get();
             $services = Service::select('id', 'name')->get();
@@ -102,35 +104,38 @@ class ExpensesController extends Controller
         } else { return redirect()->route('expenses.index'); }
     }
 
-    public function update($expenseId)
-    {
+    public function update($expenseId, Request $request) {
         if($this->canDo("ExpU")){
             $expense = Expense::findOrFail($expenseId);
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/expenses', $name);
+            }
             
-            $file = input::get('___');
-            $hType = input::get('hiden_type');
+            $hType = $request->input('hiden_type');
             $expense->fill([
-                'name' => input::get('name'),
-                'type_id' => input::get('type_id'),
-                'details' => input::get('details'),
-                'employee_id' => input::get('prop_id'),
-                'project_id' => ($hType == 2) ? input::get('reference_id') : null,
-                'service_id' => ($hType == 3) ? input::get('reference_id') : null,
-                'compte_id' => input::get('compte_id'),
-                'methode_transfert_id' => input::get('methode_transfert_id'),
-                'amount' => input::get('amount'),
-                'expense_date' => input::get('expense_date'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $expense->file : $file,
-                'remarques' => input::get('remarques')
+                'name' => $request->input('name'),
+                'type_id' => $request->input('type_id'),
+                'details' => $request->input('details'),
+                'employee_id' => $request->input('prop_id'),
+                'project_id' => ($hType == 2) ? $request->input('reference_id') : null,
+                'service_id' => ($hType == 3) ? $request->input('reference_id') : null,
+                'compte_id' => $request->input('compte_id'),
+                'methode_transfert_id' => $request->input('methode_transfert_id'),
+                'amount' => $request->input('amount'),
+                'expense_date' => $request->input('expense_date'),
+                'file' => (is_null($name) || empty($name) || strlen($name)) ? $expense->file : $name,
+                'remarques' => $request->input('remarques')
                 ]);
             $expense->save();
-            $expense->Rates()->sync(array_values(input::get('expense_rates')));
+            $expense->Rates()->sync(array_values($request->input('expense_rates')));
         }
         return redirect()->route('expenses.index');
     }
 
-    public function destroy()
-    {
+    public function destroy() {
         if($this->canDo("ExpD")){
             $expense = Expense::findOrFail($expenseId);
             $expense->delete();

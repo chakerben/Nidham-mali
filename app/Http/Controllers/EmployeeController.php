@@ -8,7 +8,7 @@ use App\Role;
 use App\EmployeePaypalAcount;
 use App\EmployeeBanklAcount;
 use App\EmployeeOtherTransferMethod;
-use Illuminate\Support\Facades\Input as Input;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -31,40 +31,43 @@ class EmployeeController extends Controller
         } else {return redirect()->route('allUsers');}
     }
 
-    public function store() {
+    public function store(Request $request) {
         if($this->canDo("UsrAe")){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/employees', $name);
+        
             $employee = Employee::create([
-                'name' => input::get('name'),
-                'role_id' => input::get('role_id'),
-                'details' => input::get('details'),
-                'transfer_method_id' => input::get('transfer_method_id'),
-                'file' => input::get('___')
+                'name' => $request->input('name'),
+                'role_id' => $request->input('role_id'),
+                'details' => $request->input('details'),
+                'transfer_method_id' => $request->input('transfer_method_id'),
+                'file' => $name
                 ]);
         }
         return redirect()->route('allUsers');
     }
 
-    public function storePaypalAcount($employeeId) {
+    public function storePaypalAcount($employeeId, Request $request) {
         $paypalAcount = EmployeePaypalAcount::create([
-            'email' => input::get('email'),
+            'email' => $request->input('email'),
             'employee_id' => $employeeId
             ]);
         return redirect()->route('employees.edit', ['employee' => $employeeId]);
     }
 
-    public function storeBankAcount($employeeId) {
+    public function storeBankAcount($employeeId, Request $request) {
         $bankAcount = EmployeeBankAcount::create([
-            'bank_name' => input::get('bank_name'),
-            'acount_num' => input::get('acount_num'),
+            'bank_name' => $request->input('bank_name'),
+            'acount_num' => $request->input('acount_num'),
             'employee_id' => $employeeId
             ]);
         return redirect()->route('employees.edit', ['employee' => $employeeId]);
     }
 
-    public function storeOtherTransferMethod($employeeId) {
+    public function storeOtherTransferMethod($employeeId, Request $request) {
         $otherTransferMethod = EmployeeOtherTransferMethod::create([
-            'name' => input::get('name'),
-            'acount_num' => input::get('acount_num'),
+            'name' => $request->input('name'),
+            'acount_num' => $request->input('acount_num'),
             'employee_id' => $employeeId
             ]);
         return redirect()->route('employees.edit', ['employee' => $employeeId]);
@@ -79,16 +82,22 @@ class EmployeeController extends Controller
         } else { return redirect()->route('allUsers'); }
     }
 
-    public function update($employeeId) {
+    public function update($employeeId, Request $request) {
         if($this->canDo("UsrUe")){
             $employee = Employee::findOrFail($employeeId);
-            $file = input::get('___');
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/employees', $name);
+            }
+            
             $employee->fill([
-                'name' => input::get('name'),
-                'role_id' => input::get('role_id'),
-                'details' => input::get('details'),
-                'transfer_method_id' => input::get('transfer_method_id'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $employee->file : $file
+                'name' => $request->input('name'),
+                'role_id' => $request->input('role_id'),
+                'details' => $request->input('details'),
+                'transfer_method_id' => $request->input('transfer_method_id'),
+                'file' => (is_null($name) || empty($name) || strlen($name)) ? $employee->file : $name
                 ]);
             $employee->save();
         }

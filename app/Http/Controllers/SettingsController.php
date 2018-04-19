@@ -9,6 +9,8 @@ use App\Transfer;
 use App\Role;
 use App\Rate;
 use App\BancAcount;
+use App\Project;
+use App\Client;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Support\Facades\Input as Input;
@@ -20,7 +22,6 @@ class SettingsController extends Controller
 
     public function index($rate = false)
     {
-        //$this->canDo("ExpD");
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -40,14 +41,17 @@ class SettingsController extends Controller
         $rates = Rate::all();
         //Récupère tout les comptes
         $transfers = Transfer::all();
+        //Récupère tout les projects
+        $projects = Project::select('id', 'name')->get();
+        //Récupère tout les clients
+        $clients = Client::select('id', 'name')->get();
 
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
             "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "transfers" => $transfers,
-            "banks" => $banks]);
+            "banks" => $banks, 'projects' => $projects, 'clients' => $clients]);
     }
 
-    public function setSetting()
-    {
+    public function setSetting() {
         if($this->canDo("SetAg") || $this->canDo("SetUg")){
             $inputs = Input::except('_token');
             foreach ($inputs as $key => $value){
@@ -63,28 +67,25 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function createRole()
-    {
+    public function createRole() {
         if(input::get('newRole') != "")
             $methode = Role::create([ 'name' => input::get('newRole') ]);
         return redirect()->route('settings');
     }
 
-    public function createExpenseType()
-    {
+    public function createExpenseType() {
         if(input::get('newType') != "")
             $methode = ExpenseType::create([ 'name' => input::get('newType') ]);
         return redirect()->route('settings');
     }
 
-    public function createTransferMethode()
-    {
+    public function createTransferMethode() {
         if(input::get('newMethode') != "")
             $methode = TransferMethode::create([ 'name' => input::get('newMethode') ]);
         return redirect()->route('settings');
     }
 
-    public function createBankAcount(){
+    public function createBankAcount() {
         if($this->canDo("SetAa")){
             $acount = BancAcount::create([
                 'bank_name' => input::get('bank_name'),
@@ -110,13 +111,13 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function deleteRate($rateId){
+    public function deleteRate($rateId) {
         $rate = Rate::findOrFail($rateId);
         $rate->delete();
         return redirect()->route('settings');
     }
 
-    public function editRate($rateId){ 
+    public function editRate($rateId) { 
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -144,7 +145,7 @@ class SettingsController extends Controller
             "transfers" => $transfers, "banks" => $banks, "rateToEdit" => $rateToEdit]);
     }
 
-    public function updateRate($rateId){
+    public function updateRate($rateId) {
         $rate = Rate::find($rateId);
         $rate->fill([
             'name' => input::get('name'),
@@ -155,7 +156,7 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function editTransfer($transferId){ 
+    public function editTransfer($transferId) { 
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -183,7 +184,7 @@ class SettingsController extends Controller
             "transfers" => $transfers, "banks" => $banks, "transferToEdit" => $transferToEdit]);
     }
 
-    private function canDo($section){
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["SetPerms"];
         //dd($permissions);
         return $permissions["$section"];

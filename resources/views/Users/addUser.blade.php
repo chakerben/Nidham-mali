@@ -223,7 +223,7 @@
 															<span class="input-group-addon btn default btn-file">
 																<span class="fileinput-new"> إختر المرفق </span>
 																<span class="fileinput-exists"> تغيير </span>
-																<input type="file" name="..." @isset($user->photo) value="{{ $user->photo }}" @endisset> </span>
+																<input type="file" name="photo" @isset($user->photo) value="{{ $user->photo }}" @endisset> </span>
 															<a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> حذف </a>
 														</div>
 													</div>

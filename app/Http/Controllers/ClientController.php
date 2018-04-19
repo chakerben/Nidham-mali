@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Client;
-use Illuminate\Support\Facades\Input as Input;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,13 +21,16 @@ class ClientController extends Controller
         } else {return redirect()->route('allUsers');}
     }
 
-    public function store() {
+    public function store(Request $request) {
         if($this->canDo("UsrAc")){
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/clients', $name);
+        
             $client = Client::create([
                 'name' => input::get('name'),
                 'paymentMode' => input::get('paymentMode'),
                 'details' => input::get('details'),
-                'file' => input::get('___')
+                'file' => $name
                 ]);
         }
         return redirect()->route('allUsers');
@@ -40,15 +43,21 @@ class ClientController extends Controller
         } else { return redirect()->route('allUsers'); }
     }
 
-    public function update($clientId) {
+    public function update($clientId, Request $request) {
         if($this->canDo("UsrUc")){
             $client = Client::findOrFail($clientId);
-            $file = input::get('___');
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/clients', $name);
+            }
+
             $client->fill([
                 'name' => input::get('name'),
                 'paymentMode' => input::get('paymentMode'),
                 'details' => input::get('details'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $client->file : $file
+                'file' => (is_null($name) || empty($name) || strlen($name)) ? $client->file : $name
                 ]);
             $client->save();
         }

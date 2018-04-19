@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Service;
-use Illuminate\Support\Facades\Input as Input;
+//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,16 +26,18 @@ class ServicesController extends Controller
         return ($this->canDo("SrvA")) ? view('ProjectsAndServices.addService') : redirect()->route('allProjectsAndServices');
     }
 
-    public function store()
+    public function store(Request $request)
     {
         if ($this->canDo("SrvA")) {
-            $file = input::get('___');
+            $name = $request->file('upload')->getClientOriginalName();
+            $path = $request->file('upload')->storeAs('files/services', $name);
+            
             $service = Service::create([
-                'name' => input::get('name'),
-                'details' => input::get('details'),
-                'cost' => input::get('cost'),
-                'remarques' => input::get('remarques'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $service->file : $file
+                'name' => $request->input('name'),
+                'details' => $request->input('details'),
+                'cost' => $request->input('cost'),
+                'remarques' => $request->input('remarques'),
+                'file' => $name
                 ]);
             return view('ProjectsAndServices.index');
         } else {
@@ -53,17 +55,23 @@ class ServicesController extends Controller
         }
     }
 
-    public function update($serviceId)
+    public function update($serviceId, Request $request)
     {
         if ($this->canDo("SrvU")) {
             $service = Service::findOrFail($serviceId);
-            $file = input::get('___');
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/services', $name);
+            }
+            
             $service->fill([
-                'name' => input::get('name'),
-                'details' => input::get('details'),
-                'cost' => input::get('cost'),
-                'remarques' => input::get('remarques'),
-                'file' => (is_null($file) || empty($file) || strlen($file)) ? $service->file : $file
+                'name' => $request->input('name'),
+                'details' => $request->input('details'),
+                'cost' => $request->input('cost'),
+                'remarques' => $request->input('remarques'),
+                'file' => (is_null($name) || empty($name) || strlen($name)) ? $service->file : $name
                 ]);
             $service->save();
         }

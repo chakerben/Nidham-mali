@@ -16,7 +16,7 @@
         <!-- BEGIN HEADER -->
         <div class="page-header navbar navbar-fixed-top">
             <!-- BEGIN HEADER INNER -->
-            @include('common.pageHeader');
+            @include('common.pageHeader')
             <!-- END HEADER INNER -->
         </div>
         <!-- END HEADER -->
@@ -28,7 +28,7 @@
             <!-- BEGIN SIDEBAR -->
             <div class="page-sidebar-wrapper">
                 <!-- BEGIN SIDEBAR -->
-                @include('common.sidebar');
+                @include('common.sidebar')
                 <!-- END SIDEBAR -->
             </div>
             <!-- END SIDEBAR -->
@@ -65,108 +65,9 @@
 										<div class="marketplace__content">  
 							  				<div class="marketplace__aside">
 											<div class="filters__container filters__container--vertical filters__container--collapsed">
-												<form class="filters__form nomargin">
-													<h3 class="marketplace__title no-margin">أدوات التصفية<i class="mdi mdi-chevron-down mdi-24px"></i></h3>
-													<div class="filters filters--vertical">
-														<div class="filters__section filters__section--category filters__section--vertical">
-															<div class="filters__label filters__label--vertical">
-																<input id="checkbox-0" class="checkbox-style" name="checkbox-0" type="checkbox" checked>
-																<label for="checkbox-0" class="checkbox-style-3-label">إختر الكل</label>
-															</div>
-															<div class="filters__section-content">
-																<div>
-																	<input id="checkbox-1" class="checkbox-style" name="checkbox-1" type="checkbox" checked>
-																	<label for="checkbox-1" class="checkbox-style-3-label">الكل</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-2" class="checkbox-style" name="checkbox-2" type="checkbox">
-																	<label for="checkbox-2" class="checkbox-style-3-label">
-																	المشاريع
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-3" class="checkbox-style" name="checkbox-3" type="checkbox">
-																	<label for="checkbox-3" class="checkbox-style-3-label">
-																	الخدمات
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-4" class="checkbox-style" name="checkbox-4" type="checkbox">
-																	<label for="checkbox-4" class="checkbox-style-3-label">
-																	المشاريع الناجحة
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-5" class="checkbox-style" name="checkbox-5" type="checkbox">
-																	<label for="checkbox-5" class="checkbox-style-3-label">
-																	المشاريع الخاسرة
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-6" class="checkbox-style" name="checkbox-6" type="checkbox">
-																	<label for="checkbox-6" class="checkbox-style-3-label">
-																	المشاريع المتعادلة
-																	</label>
-																</div>
-																
-																<div class="col-md-12">
-																	<hr>
-																</div>
-																
-																<div>
-																	<input id="checkbox-9" class="checkbox-style" name="checkbox-9" type="checkbox">
-																	<label for="checkbox-9" class="checkbox-style-3-label">
-																	جميع الأوقات
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-10" class="checkbox-style" name="checkbox-10" type="checkbox">
-																	<label for="checkbox-10" class="checkbox-style-3-label">
-																	فترة محددة
-																	</label>
-																	<div class="col-md-12">
-																		<input type="text" class="form-control date" name="from" placeholder="من تاريخ">
-																	</div>
-																	<hr>
-																	<div class="col-md-12">
-																		<input type="text" class="form-control date" name="to" placeholder="إلى تاريخ">
-																	</div>
-																</div>
-																
-																<div class="col-md-12">
-																	<hr>
-																</div>
-
-																<div>
-																	<input id="checkbox-7" class="checkbox-style" name="checkbox-7" type="checkbox">
-																	<label for="checkbox-7" class="checkbox-style-3-label">
-																	المنتهية
-																	</label>
-																</div>
-
-																<div>
-																	<input id="checkbox-8" class="checkbox-style" name="checkbox-8" type="checkbox">
-																	<label for="checkbox-8" class="checkbox-style-3-label">
-																	الجارية
-																	</label>
-																</div>
-
-																<div class="clearfix"></div>
-																	
-																<div class="text-center margin-top-30">
-																	<button type="button" class="btn green">عـرض</button>
-																</div>
-
-							  								</div>
-														</div>
-													  </div>
-												</form>
+												<!-- BEGIN LIST FILTERS -->
+												@include('ProjectsAndServices.fltrs')
+												<!-- END LIST FILTERS -->
 											</div>
 										</div>
 									</div>

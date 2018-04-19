@@ -60,9 +60,9 @@
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
-									@empty($project) <form action="/projects" method="POST"> @endempty
+									@empty($project) <form action="/projects" method="POST" enctype="multipart/form-data"> @endempty
 										@isset($project)
-											<form action="/projects/{{ $project->id }}" method="POST"> 
+											<form action="/projects/{{ $project->id }}" method="POST" enctype="multipart/form-data"> 
 											@method('PUT')
 										@endisset
 											@csrf
@@ -176,7 +176,6 @@
 											</div>
 										</fieldset> 
 									</div>
-									
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label>مرفق</label>
@@ -190,7 +189,8 @@
 													<span class="input-group-addon btn default btn-file">
 														<span class="fileinput-new"> إختر المرفق </span>
 														<span class="fileinput-exists"> تغيير </span>
-														<input type="file" name="..." @isset($project->file) value="{{ $project->file }}" @endisset> </span>
+															<input type="file" id="upload" name="upload" @isset($project->file) value="{{ $project->file }}" @endisset>
+														</span>
 													<a href="javascript:;" class="input-group-addon btn red fileinput-exists" data-dismiss="fileinput"> حذف </a>
 												</div>
 											</div>
