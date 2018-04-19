@@ -20,6 +20,7 @@ Route::resource('services', 'ServicesController');
 Route::resource('expenses', 'ExpensesController');
 Route::resource('payments', 'PaymentsController');
 Route::GET('/allUsers', 'allUsers@index')->name('allUsers');
+Route::POST('/allUsers', 'allUsers@index')->name('allUsers');
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('users', 'UserController');

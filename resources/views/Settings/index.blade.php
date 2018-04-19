@@ -262,12 +262,6 @@
 																						<td> {{$type->id}} </td>
 																						<td> {{$type->name}} </td>
 																					</tr>
-																					<!--
-																						<tr>
-																							<td> 2 </td>
-																							<td> محلل </td>
-																						</tr>
-																					-->
 																				@endforeach
 																			</tbody>
 																		</table>

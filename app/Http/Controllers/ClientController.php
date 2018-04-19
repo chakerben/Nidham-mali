@@ -27,9 +27,9 @@ class ClientController extends Controller
             $path = $request->file('upload')->storeAs('files/clients', $name);
         
             $client = Client::create([
-                'name' => input::get('name'),
-                'paymentMode' => input::get('paymentMode'),
-                'details' => input::get('details'),
+                'name' => $request->input('name'),
+                'paymentMode' => $request->input('paymentMode'),
+                'details' => $request->input('details'),
                 'file' => $name
                 ]);
         }
@@ -54,9 +54,9 @@ class ClientController extends Controller
             }
 
             $client->fill([
-                'name' => input::get('name'),
-                'paymentMode' => input::get('paymentMode'),
-                'details' => input::get('details'),
+                'name' => $request->input('name'),
+                'paymentMode' => $request->input('paymentMode'),
+                'details' => $request->input('details'),
                 'file' => (is_null($name) || empty($name) || strlen($name)) ? $client->file : $name
                 ]);
             $client->save();

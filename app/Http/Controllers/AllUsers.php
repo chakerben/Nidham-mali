@@ -11,27 +11,32 @@ class AllUsers extends Controller
 {
     public function __construct() { $this->middleware('auth'); }
 
-    public function index () {
-        $listCli = Client::select('id', 'name', 'updated_at')->get();
-        foreach ($listCli as $cli){
-            $cli->root = "clients";
-            $cli->type = "عميل";
-        }
+    public function index (Request $request) {
+        $getUsers     = ($request->method() == "POST" && $request->input('Users'))     || $request->method() == "GET";
+        $getEmployees = ($request->method() == "POST" && $request->input('Employees')) || $request->method() == "GET";
+        $getClients   = ($request->method() == "POST" && $request->input('Clients'))   || $request->method() == "GET";
 
-        $listEmp = Employee::select('id', 'name', 'updated_at')->get();
-        foreach ($listEmp as $emp){
-            $emp->root = "employees";
-            $emp->type = "مقدم خدمة";
-        }
-        
-        $listUsr = User::select('id', 'name', 'updated_at')->get();
+        $listUsr = $getUsers ? User::select('id', 'name', 'updated_at')->get() : collect();
         foreach ($listUsr as $usr){
             $usr->root = "users";
             $usr->type = "مستخدم";
         }
+
+        $listEmp = $getEmployees ? Employee::select('id', 'name', 'updated_at')->get() : collect();
+        foreach ($listEmp as $emp){
+            $emp->root = "employees";
+            $emp->type = "مقدم خدمة";
+        }
+
+        $listCli = $getClients ? Client::select('id', 'name', 'updated_at')->get() : collect();
+        foreach ($listCli as $cli){
+            $cli->root = "clients";
+            $cli->type = "عميل";
+        }
         
+        $all = $getUsers && $getEmployees && $getClients;
+        $filtres = ["getUsers" => $getUsers, "getEmployees" => $getEmployees, "getClients" => $getClients, "all" => $all];
         $listGlobal = $listCli->concat($listEmp)->concat($listUsr)->sortBy('updated_at');
-        //dd($listGlobal);
-        return view('Users.index', ["listGlobal" => $listGlobal]);
+        return view('Users.index', ["listGlobal" => $listGlobal, "filtres" => $filtres]);
     }
 }
