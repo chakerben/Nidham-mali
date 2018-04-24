@@ -65,7 +65,7 @@
                             <a href="#"> <i class="icon-lock"></i> شاشة الغلق </a>
                         </li>
                         <li>
-                            <a href="{{route('logout')}}"> <i class="icon-key"></i> تسجيل خروج </a>
+                            <a href="{{route('logout', [], true)}}"> <i class="icon-key"></i> تسجيل خروج </a>
                         </li>
                     </ul>
                 </li>

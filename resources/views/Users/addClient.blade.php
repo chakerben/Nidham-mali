@@ -58,9 +58,9 @@
                                 </div>
 
                                 <div class="portlet-body">
-                                    @empty($client) <form action="{{route('clients.create')}}" method="POST"> @endempty
+                                    @empty($client) <form action="{{route('clients.store', [], true)}}" method="POST"> @endempty
 									@isset($client)
-										<form action="{{route('clients.update', $client->id)}}" method="POST"> 
+										<form action="{{route('clients.update', $client->id, true)}}" method="POST"> 
 										@method('PUT')
 									@endisset
 									    @csrf                
@@ -81,6 +81,7 @@
                                                     <option value="2" @isset($client->paymentMode) {{ $client->paymentMode == 2 ? 'selected="selected"' : '' }} @endisset>2</option>
                                                     <option value="3" @isset($client->paymentMode) {{ $client->paymentMode == 3 ? 'selected="selected"' : '' }} @endisset>3</option>
                                                     <option value="4" @isset($client->paymentMode) {{ $client->paymentMode == 4 ? 'selected="selected"' : '' }} @endisset>4</option>
+                                                    <option value="7" @isset($client->paymentMode) {{ $client->paymentMode == 7 ? 'selected="selected"' : '' }} @endisset>PayPal</option>
                                                 </select>
                                             </div>
                                         </div>                          

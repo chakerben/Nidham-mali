@@ -78,7 +78,7 @@
                                                 <div class="form-horizontal form-bordered">
 													<div class="form-body">
 														<div class="col-md-10 col-md-offset-1 col-xs-12">
-															<form action="{{route('setSetting')}}" method="POST" id="settingForm">
+															<form action="{{route('setSetting', [], true)}}" method="POST" id="settingForm">
 																@csrf
 																<div class="form-group">
 																	<label class="control-label col-md-2">شعار الموقع</label>
@@ -177,7 +177,7 @@
 														<fieldset>
 															<legend class="font-purple">مهام مقدمين الخدمة</legend>
 
-															<form action="{{route('createRole')}}" method="POST">
+															<form action="{{route('createRole', [], true)}}" method="POST">
 																@csrf
 																<div class="form-group">
 																	<label>اسم المهمة </label>
@@ -229,7 +229,7 @@
 														<fieldset>
 															<legend class="font-purple">نوع المصروف</legend>
 
-															<form action="{{route('createExpenseType')}}" method="POST">
+															<form action="{{route('createExpenseType', [], true)}}" method="POST">
 																@csrf
 																<div class="form-group">
 																	<label>نوع المصروف </label>
@@ -275,7 +275,7 @@
 														<fieldset>
 															<legend class="font-purple">طرق التحويل</legend>
 															
-															<form action="{{route('createTransferMethode')}}" method="POST">
+															<form action="{{route('createTransferMethode', [], true)}}" method="POST">
 																@csrf
 																<div class="form-group">
 																	<label>طريقة تحويل </label>
@@ -341,7 +341,7 @@
 												<div class="form-horizontal form-bordered">
 													<div class="form-body">
 														<div class="col-md-12">
-															<form id="acountForm" action="{{route('createBankAcount')}}" method="POST">
+															<form id="acountForm" action="{{route('createBankAcount', [], true)}}" method="POST">
 																@csrf
 																<div class="col-md-6 col-xs-12">
 																	<div class="form-group">
@@ -497,11 +497,11 @@
 											
 											<div class="tab-pane" id="tab_3">
 												@isset($transferToEdit)
-													<form action="{{route('transfer.update', $transferToEdit->id)}}" method="POST" id="transfersForm">
+													<form action="{{route('transfer.update', $transferToEdit->id, true)}}" method="POST" id="transfersForm">
 														@method('PUT')
 												@endisset
 												@empty($transferToEdit)
-													<form action="{{route('transfer.store')}}" method="POST" id="transfersForm">
+													<form action="{{route('transfer.store', [], true)}}" method="POST" id="transfersForm">
 												@endempty
 													@csrf
 													<div class="row">
@@ -732,11 +732,11 @@
 													<div class="form-body">
 														<div class="col-md-10 col-md-offset-1 col-xs-12">
 															@isset($rateToEdit)
-																<form action="{{route('updateRate', $rateToEdit->id)}}" method="POST" id="ratesForm">
+																<form action="{{route('updateRate', $rateToEdit->id, true)}}" method="POST" id="ratesForm">
 																	@method('PUT')
 															@endisset
 															@empty($rateToEdit)
-																<form action="{{route('createRate')}}" method="POST" id="ratesForm">
+																<form action="{{route('createRate', [], true)}}" method="POST" id="ratesForm">
 															@endempty
 																@csrf
 																<div class="form-group">

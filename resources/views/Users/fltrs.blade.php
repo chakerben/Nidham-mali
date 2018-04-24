@@ -1,4 +1,4 @@
-<form class="filters__form nomargin" action="{{route('fltrUsers')}}" method="POST">
+<form class="filters__form nomargin" action="{{route('fltrUsers', [], true)}}" method="POST">
     @csrf
     <h3 class="marketplace__title no-margin">
         أدوات التصفية<i class="mdi mdi-chevron-down mdi-24px"></i>

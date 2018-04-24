@@ -61,9 +61,9 @@
                                 </div>
                                 <div class="portlet-body">
                                     
-                                    @empty($service) <form action="{{route('services.store')}}" method="POST"> @endempty
+                                    @empty($service) <form action="{{route('services.store', [], true)}}" method="POST"> @endempty
                                     @isset($service)
-                                        <form action="{{route('services.update', $service->id)}}" method="POST"> 
+                                        <form action="{{route('services.update', $service->id, true)}}" method="POST"> 
                                         @method('PUT')
                                     @endisset
                                         @csrf

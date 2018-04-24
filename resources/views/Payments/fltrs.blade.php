@@ -1,4 +1,4 @@
-<form action="{{route('fltrPayments')}}" method="POST" class="filters__form nomargin">
+<form action="{{route('fltrPayments', [], true)}}" method="POST" class="filters__form nomargin">
     @method('PUT')
     @csrf
 	<h3 class="marketplace__title no-margin">

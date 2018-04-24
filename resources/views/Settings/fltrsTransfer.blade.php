@@ -1,4 +1,4 @@
-<form action="{{route('settingsFltr')}}" method="POST" class="filters__form nomargin">
+<form action="{{route('settingsFltr', [], true)}}" method="POST" class="filters__form nomargin">
     @csrf
     <h3 class="marketplace__title no-margin">
         أدوات التصفية<i class="mdi mdi-chevron-down mdi-24px"></i>

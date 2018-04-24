@@ -60,9 +60,9 @@
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
-                                    @empty($employee) <form action="{{route('employees.create')}}" method="POST" id="formEmployee"> @endempty
+                                    @empty($employee) <form action="{{route('employees.store', [], true)}}" method="POST" id="formEmployee"> @endempty
                                     @isset($employee)
-                                        <form action="{{route('employees.update', $employee->id)}}" method="POST" id="formEmployee"> 
+                                        <form action="{{route('employees.update', $employee->id, true)}}" method="POST" id="formEmployee"> 
                                         @method('PUT')
                                     @endisset
                                         @csrf
@@ -133,7 +133,7 @@
                                             <fieldset id="paypal" style="display: none;">
                                                 <legend class="font-purple">باى بال </legend>
                                                 
-                                                <form action="{{route('addEmpPaypalAcount', $employee->id)}}" method="POST">
+                                                <form action="{{route('addEmpPaypalAcount', $employee->id, true)}}" method="POST">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label>الايميل <span>*</span></label>
@@ -187,7 +187,7 @@
                                             <fieldset id="bank" style="display: none;">
                                                 <legend class="font-purple">بـنـك</legend>
                                                 
-                                                <form action="{{route('addEmpBankAcount', $employee->id)}}" method="POST">
+                                                <form action="{{route('addEmpBankAcount', $employee->id, true)}}" method="POST">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label>اسم البنك </label>
@@ -252,7 +252,7 @@
                                             <fieldset id="other" style="display: none;">
                                                 <legend class="font-purple">أخــرى</legend>
 
-                                                <form action="{{route('addEmpTransferMethod', $employee->id)}}" method="POST">
+                                                <form action="{{route('addEmpTransferMethod', $employee->id, true)}}" method="POST">
                                                     @csrf
                                                     <div class="form-group">
                                                         <label>طريقة التحويل </label>

@@ -58,9 +58,9 @@
                                 </div>
                                 <div class="portlet-body">
 
-									@empty($payment) <form action="{{route('payments.store')}}" method="POST"> @endempty
+									@empty($payment) <form action="{{route('payments.store', [], true)}}" method="POST"> @endempty
 									@isset($payment)
-										<form action="{{route('payments.update', $payment->id)}}" method="POST"> 
+										<form action="{{route('payments.update', $payment->id, true)}}" method="POST"> 
 										@method('PUT')
 									@endisset
 										@csrf
