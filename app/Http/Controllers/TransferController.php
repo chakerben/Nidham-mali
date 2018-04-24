@@ -26,8 +26,11 @@ class TransferController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("SetAt")){
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/transfers', $name);
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/transfers', $name);
+            }
 
             $transfer = Transfer::create([
                 'banc_acount_from_id' => $request->input('banc_acount_from_id'),

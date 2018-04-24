@@ -431,7 +431,7 @@
 					if(this.checked != state)
 						this.click();
 				});
-			});
+			})
 		</script>
     </body>
 </html>

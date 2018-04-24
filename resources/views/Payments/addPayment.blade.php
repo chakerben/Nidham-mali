@@ -38,9 +38,7 @@
                 <div class="page-content">
 					
                     <!-- BEGIN PAGE HEADER-->
-                    <h3 class="page-title"> المشاريع والخدمات
-                        <small></small>
-                    </h3>
+                    <h3 class="page-title"> المدفوعات <small></small> </h3>
                     <div class="page-bar">
 						@include('common.breadcrumb', ['section' => 'المدفوعات', 'route' => 'payments.index', 'page' => 'إضافة دفعة'])
                     </div>
@@ -60,9 +58,9 @@
                                 </div>
                                 <div class="portlet-body">
 
-									@empty($payment) <form action="/payments" method="POST"> @endempty
+									@empty($payment) <form action="{{route('payments.store')}}" method="POST"> @endempty
 									@isset($payment)
-										<form action="/payments/{{ $payment->id }}" method="POST"> 
+										<form action="{{route('payments.update', $payment->id)}}" method="POST"> 
 										@method('PUT')
 									@endisset
 										@csrf
@@ -339,6 +337,7 @@
 			$('#project').on('change', function(){
 				var id = $(this).val();
 				$.getJSON("/api/projectTranches/" + id , function(data){
+					console.log(data);
 					var subcat = $('#tranche_id').empty();
 					$.each(data, function(key, value){
 						var option = $('<option/>').val(value.id).text(key+1).attr("amount", value.amount);

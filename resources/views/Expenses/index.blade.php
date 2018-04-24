@@ -37,7 +37,7 @@
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
                    
-                	<button type="button" class="btn blue-hoki pull-right">إضافة مصروف</button>
+					<a class="btn blue-hoki pull-right" href="{{ route('expenses.create') }}" role="button">إضافة مصروف</a>
                    
                     <!-- BEGIN PAGE HEADER-->
                     <h3 class="page-title"> المصروفات
@@ -514,11 +514,34 @@
 			$('.date').datepicker({
 				autoclose: true,
 				todayHighlight: true,
-				language: "ar"
+				language: "ar",
+				format: "yyyy-mm-dd"
 			});
 
 			$(".marketplace__title").click(function(){
 				$(".filters__container--collapsed .filters").toggleClass("show__sbar");
+			})
+
+			$("#allTypes").click(function(){
+				var state = this.checked;
+				$('input:checkbox').not(this).not("#singlePrj").not("#singleCli").each(function() {
+					if(this.checked != state)
+						this.click();
+				});
+			})
+
+			$('.radio-style').change(function () {
+				var periode = (this.id != "limitedPeriod")
+				$('#from').prop('disabled', periode);
+				$('#to').prop('disabled', periode);
+			})
+
+			$('#singlePrj').change(function () {
+				$('#prj').prop('disabled', !this.checked);
+			})
+
+			$('#singleCli').change(function () {
+				$('#cli').prop('disabled', !this.checked);
 			})
 		</script>
         

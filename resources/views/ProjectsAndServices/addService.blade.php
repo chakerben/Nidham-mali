@@ -61,15 +61,15 @@
                                 </div>
                                 <div class="portlet-body">
                                     
-                                    @empty($service) <form action="/services" method="POST"> @endempty
+                                    @empty($service) <form action="{{route('services.store')}}" method="POST"> @endempty
                                     @isset($service)
-                                        <form action="/services/{{ $service->id }}" method="POST"> 
+                                        <form action="{{route('services.update', $service->id)}}" method="POST"> 
                                         @method('PUT')
                                     @endisset
                                         @csrf
                                         <div class="col-md-6 col-md-offset-3 col-sm-12">
                                             <div class="form-group">
-                                                <label>اسم المشروع <span>*</span></label>
+                                                <label>اسم الخدمة <span>*</span></label>
                                                 <div class="input-icon">
                                                     <i class="fa fa-file font-green "></i>
                                                     <input type="text" class="form-control" name="name" id="name" @isset($service->name) value="{{ $service->name }}" @endisset placeholder="اسم الخدمة"> 

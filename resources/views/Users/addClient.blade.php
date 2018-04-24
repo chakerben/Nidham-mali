@@ -58,9 +58,9 @@
                                 </div>
 
                                 <div class="portlet-body">
-                                    @empty($client) <form action="/clients" method="POST"> @endempty
+                                    @empty($client) <form action="{{route('clients.create')}}" method="POST"> @endempty
 									@isset($client)
-										<form action="/clients/{{ $client->id }}" method="POST"> 
+										<form action="{{route('clients.update', $client->id)}}" method="POST"> 
 										@method('PUT')
 									@endisset
 									    @csrf                

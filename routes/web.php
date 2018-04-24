@@ -12,31 +12,36 @@
 */
 
 Auth::routes();
+Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
 Route::GET('/', 'dashboardController@index')->name('home');
-Route::GET('/allProjectsAndServices', 'allProjectsAndServices@index')->name('allProjectsAndServices');
+Route::GET('/allProjectsAndServices', 'AllProjectsAndServices@index')->name('allProjectsAndServices');
+Route::POST('/allProjectsAndServices', 'AllProjectsAndServices@index')->name('fltrProjectsAndServices');
 Route::resource('projects', 'ProjectsController');
 Route::resource('services', 'ServicesController');
 Route::resource('expenses', 'ExpensesController');
+Route::PUT('expenses', 'ExpensesController@index')->name('fltrExpenses');
 Route::resource('payments', 'PaymentsController');
-Route::GET('/allUsers', 'allUsers@index')->name('allUsers');
-Route::POST('/allUsers', 'allUsers@index')->name('allUsers');
+Route::PUT('payments', 'PaymentsController@index')->name('fltrPayments');
+Route::GET('/allUsers', 'AllUsers@index')->name('allUsers');
+Route::POST('/allUsers', 'AllUsers@index')->name('fltrUsers');
 Route::resource('clients', 'ClientController');
 Route::resource('employees', 'EmployeeController');
 Route::resource('users', 'UserController');
 Route::resource('transfer', 'TransferController');
 
-Route::GET('/settings', 'settingsController@index')->name('settings');
-Route::POST('/settings', 'settingsController@setSetting')->name('setSetting');
-Route::POST('/settings/createrole', 'settingsController@createRole')->name('createRole');
-Route::POST('/settings/createxpensetype', 'settingsController@createExpenseType')->name('createExpenseType');
-Route::POST('/settings/createtransfermethode', 'settingsController@createTransferMethode')->name('createTransferMethode');
-Route::POST('/settings/createbankacount', 'settingsController@createBankAcount')->name('createBankAcount');
-Route::POST('/settings/createrate', 'settingsController@createRate')->name('createRate');
-Route::DELETE('/settings/deleterate/{id}', 'settingsController@deleteRate')->name('deleteRate');
-Route::GET('/settings/editrate/{id}', 'settingsController@editRate')->name('editRate');
-Route::PUT('/settings/editrate/{id}', 'settingsController@updateRate')->name('updateRate');
-Route::GET('/settings/edittransfer/{id}', 'settingsController@editTransfer')->name('editTransfer');
+Route::GET('/settings', 'SettingsController@index')->name('settings');
+Route::POST('/settings', 'SettingsController@index')->name('settingsFltr');
+Route::POST('/settings/set', 'SettingsController@setSetting')->name('setSetting');
+Route::POST('/settings/createrole', 'SettingsController@createRole')->name('createRole');
+Route::POST('/settings/createxpensetype', 'SettingsController@createExpenseType')->name('createExpenseType');
+Route::POST('/settings/createtransfermethode', 'SettingsController@createTransferMethode')->name('createTransferMethode');
+Route::POST('/settings/createbankacount', 'SettingsController@createBankAcount')->name('createBankAcount');
+Route::POST('/settings/createrate', 'SettingsController@createRate')->name('createRate');
+Route::DELETE('/settings/deleterate/{id}', 'SettingsController@deleteRate')->name('deleteRate');
+Route::GET('/settings/editrate/{id}', 'SettingsController@editRate')->name('editRate');
+Route::PUT('/settings/editrate/{id}', 'SettingsController@updateRate')->name('updateRate');
+Route::GET('/settings/edittransfer/{id}', 'SettingsController@editTransfer')->name('editTransfer');
 
 Route::POST('/employees/addemppaypalacount/{id}', 'EmployeeController@storePaypalAcount')->name('addEmpPaypalAcount');
 Route::POST('/employees/addempbankacount/{id}', 'EmployeeController@storeBankAcount')->name('addEmpBankAcount');

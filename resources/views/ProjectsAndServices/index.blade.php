@@ -177,7 +177,8 @@
 			$('.date').datepicker({
 				autoclose: true,
 				todayHighlight: true,
-				language: "ar"
+				language: "ar",
+				format: "yyyy-mm-dd"
 			});
 
 			$(".marketplace__title").click(function(){
@@ -189,9 +190,14 @@
 					delUrl = e.relatedTarget.id;
 				$modal.find('#deleteForm').attr('action', delUrl);
 			})
-		</script>
-		
-		<script>
+
+			$("#checkAll").click(function(){
+				var state = this.checked;
+				$('input:checkbox').not(this).not("#allTime").not("#finiched").not("#inProgres").each(function() {
+					if(this.checked != state)
+						this.click();
+				});
+			})
 		</script>
     </body>
 </html>

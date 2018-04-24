@@ -66,7 +66,7 @@
                                                                                           
 								 <div class="col-md-6 col-md-offset-3 col-sm-12">
 									<div class="form-group">
-										<label>اسم المشروع <span>*</span></label>
+										<label>اسم الخدمة <span>*</span></label>
 										<div class="input-icon">
 											<i class="fa fa-file font-green "></i>
 											<input type="text" class="form-control" value="{{$service->name}}" placeholder="اسم الخدمة" disabled> 

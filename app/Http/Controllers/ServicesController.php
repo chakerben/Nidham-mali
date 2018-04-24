@@ -29,8 +29,11 @@ class ServicesController extends Controller
     public function store(Request $request)
     {
         if ($this->canDo("SrvA")) {
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/services', $name);
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/services', $name);
+            }
             
             $service = Service::create([
                 'name' => $request->input('name'),

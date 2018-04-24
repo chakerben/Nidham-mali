@@ -44,8 +44,11 @@ class ProjectsController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("PrjA")){
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/projects', $name);
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/projects', $name);
+            }
         
             $project = Project::create([
                 'name' => $request->input('name'),

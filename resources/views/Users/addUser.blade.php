@@ -59,9 +59,9 @@
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
-									@empty($user) <form action="/users" method="POST" id="formUser"> @endempty
+									@empty($user) <form action="{{route('users.create')}}" method="POST" id="formUser"> @endempty
 									@isset($user)
-										<form action="/users/{{ $user->id }}" method="POST" id="formUser"> 
+										<form action="{{route('users.update', $user->id)}}" method="POST" id="formUser"> 
 										@method('PUT')
 									@endisset
 										@csrf

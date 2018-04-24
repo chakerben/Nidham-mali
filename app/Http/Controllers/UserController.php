@@ -26,8 +26,11 @@ class UserController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("UsrAu")){
-            $photo = $request->file('photo')->getClientOriginalName();
-            $path = $request->file('photo')->storeAs('files/users', $photo);
+            $photo = "";
+            if(!is_null($request->file('photo'))){
+                $photo = $request->file('photo')->getClientOriginalName();
+                $path = $request->file('photo')->storeAs('files/users', $photo);
+            }
 
             $user = User::create([
                 'name' => $request->input('name'),
@@ -80,10 +83,10 @@ class UserController extends Controller
         return redirect()->route('allUsers');
     }
 
-    private function getPermissions($prefix, $perms, Request $request){
+    private function getPermissions($prefix, $perms){
         $permissions = [];
         foreach($perms as $perm){
-            $permissions[$prefix.$perm] = $request->input($prefix.$perm) == "on";
+            $permissions[$prefix.$perm] = input::get($prefix.$perm) == "on";
         }        
         return $permissions;
     }

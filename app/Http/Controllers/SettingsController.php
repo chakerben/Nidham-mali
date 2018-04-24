@@ -20,8 +20,11 @@ class SettingsController extends Controller
 {
     public function __construct() { $this->middleware('auth'); }
 
-    public function index($rate = false)
+    public function index(Request $request)
     {
+        $allTime = ($request->method() == "POST" && $request->input('allTime')) || $request->method() == "GET";
+        $allBanc = ($request->method() == "POST" && $request->input('allBanc')) || $request->method() == "GET";
+
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -40,15 +43,36 @@ class SettingsController extends Controller
         //Récupère tout les rates (pourcentages)
         $rates = Rate::all();
         //Récupère tout les comptes
-        $transfers = Transfer::all();
+        if($allTime && $allBanc) {
+            $transfers = Transfer::all();
+        } else {
+            $query = Transfer::query();
+            if(!$allBanc){
+                foreach($request->input('bancs') as $banc){
+                    $query->whereHas('AcountFrom', function($query) use($banc){
+                        $query->where('bank_name', 'like', $banc);
+                    });
+                    $query->orWhereHas('AcountTo', function($query) use($banc){
+                        $query->where('bank_name', 'like', $banc);
+                    });
+                }
+            }
+            if (!$allTime) {
+                $query->whereBetween('created_at', [$request->input('from'), $request->input('to')])->get();
+            }
+            $transfers = $query->get();
+        }
         //Récupère tout les projects
         $projects = Project::select('id', 'name')->get();
         //Récupère tout les clients
         $clients = Client::select('id', 'name')->get();
 
+        $transFltrs = ["allTime" => $allTime, "from" => $request->input('from'), "to" => $request->input('to'),
+            "allBanc" => $allBanc, "bancs" => $request->input('bancs')];
+
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
             "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "transfers" => $transfers,
-            "banks" => $banks, 'projects' => $projects, 'clients' => $clients]);
+            "banks" => $banks, 'projects' => $projects, 'clients' => $clients, "transFltrs" => $transFltrs]);
     }
 
     public function setSetting() {
@@ -139,10 +163,14 @@ class SettingsController extends Controller
         $transfers = Transfer::all();
         //Récupère le rate (pourcentage) a éditere
         $rateToEdit = $rateId ? Rate::findOrFail($rateId) : null;
+        //Récupère tout les projects
+        $projects = Project::select('id', 'name')->get();
+        //Récupère tout les clients
+        $clients = Client::select('id', 'name')->get();
 
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
-            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates,
-            "transfers" => $transfers, "banks" => $banks, "rateToEdit" => $rateToEdit]);
+            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "banks" => $banks,
+            "transfers" => $transfers, "rateToEdit" => $rateToEdit, "projects" => $projects, "clients" => $clients]);
     }
 
     public function updateRate($rateId) {

@@ -60,9 +60,9 @@
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
-									@empty($project) <form action="/projects" method="POST" enctype="multipart/form-data"> @endempty
+									@empty($project) <form action="{{route('projects.store')}}" method="POST" enctype="multipart/form-data"> @endempty
 										@isset($project)
-											<form action="/projects/{{ $project->id }}" method="POST" enctype="multipart/form-data"> 
+											<form action="{{route('projects.update', $project->id)}}" method="POST" enctype="multipart/form-data"> 
 											@method('PUT')
 										@endisset
 											@csrf

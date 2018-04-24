@@ -11,20 +11,91 @@ use App\TransferMethode;
 use App\Rate;
 use App\Employee;
 use App\Client;
-//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ExpensesController extends Controller
 {
     public function __construct() { $this->middleware('auth'); }
 
-    public function index(){
-        $listExp = Expense::with(['type', 'Project.client', 'Service'])->get();
+    public function index(Request $request){
         $projects = Project::select('id', 'name')->get();
         $clients = Client::select('id', 'name')->get();
         $expenseTypes = ExpenseType::select('id', 'name')->get();
-        return view('Expenses.index', ['listExp' => $listExp, 'projects' => $projects, 'clients' => $clients, 'expenseTypes' => $expenseTypes]);
+
+        $allTime = ($request->method() == "PUT" && $request->input('fltrPeriod') == "checkAll") || $request->method() == "GET";
+        $allTyps = ($request->method() == "PUT" && $request->input('allTypes'))   || $request->method() == "GET";
+        $allPrjs = ($request->method() == "PUT" && !$request->input('singlePrj')) || $request->method() == "GET";
+        $allClis = ($request->method() == "PUT" && !$request->input('singleCli')) || $request->method() == "GET";
+        $fltrTyps = [];
+
+        if ($allTime && $allTyps && $allPrjs && $allClis) {
+            $listExp = Expense::with(['type', 'Project.client', 'Service'])->get();
+        } else {
+            $query = Expense::query()->with(['type', 'Project.client', 'Service']);
+
+            //Filter by project
+            if(!$allPrjs){
+                $prj = $request->input('prj');
+                $query->where('project_id', '=', $prj);
+            }
+            //Filter by client
+            if(!$allClis){
+                $cli = $request->input('cli');
+                $query->whereHas('Project', function($query) use($cli){
+                    $query->where('client_id', '=', $cli);
+                });
+            }
+            //Filter by periode
+            if(!$allTime){
+                Carbon::setWeekStartsAt(Carbon::MONDAY);
+                switch ($request->input('fltrPeriod')) {
+                    case 'lastWeek':
+                        $from = Carbon::now()->startOfWeek();
+                        $to = Carbon::now()->endOfWeek();
+                        break;
+
+                    case 'lastMonth':
+                        $from = Carbon::now()->startOfMonth();
+                        $to = Carbon::now()->endOfMonth();
+                        break;
+
+                    case 'lastYear':
+                        $from = Carbon::now()->startOfYear();
+                        $to = Carbon::now()->endOfYear();
+                        break;
+
+                    case 'limitedPeriod':
+                        $from = $request->input('from');
+                        $to = $request->input('to');
+                        break;
+                    
+                    default:
+                        break;
+                }
+                $query->whereBetween('expense_date', [$from, $to]);
+            }
+            //Filter by type
+            if(!$allTyps){
+                foreach($expenseTypes as $type){
+                    if($request->input('cb_type_'.$type->id)){
+                        $query->orWhere('type_id', '=', $request->input('cb_type_'.$type->id));
+                    }
+                    $fltrTyps["$type->id"] = $request->input('cb_type_'.$type->id);
+                }
+            }
+
+            $listExp = $query->get();
+        }
+
+        $fltrs = ["allPrjs" => $allPrjs, "allClis" => $allClis, "allTyps" => $allTyps, "allTime" => $allTime,
+            "prj" => $request->input('prj'), "cli" => $request->input('cli'), "from" => $request->input('from'),
+            "periode" => $request->input('fltrPeriod'), "to" => $request->input('to'), "fltrTyps" => $fltrTyps];
+            //dd($request->input('fltrPeriod'));
+
+        return view('Expenses.index', ['listExp' => $listExp, 'projects' => $projects, 'clients' => $clients,
+            'expenseTypes' => $expenseTypes, "fltrs" => $fltrs]);
     }
 
     public function show($expenseId) {
