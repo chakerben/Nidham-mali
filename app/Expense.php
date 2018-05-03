@@ -31,6 +31,14 @@ class Expense extends Model
         return $this->belongsToMany('App\Rate');
     }
 
+    public function bancAcount(){
+        return $this->belongsTo('App\BancAcount', 'compte_id');
+    }
+
+    public function transferMethode(){
+        return $this->belongsTo('App\TransferMethode', 'methode_transfert_id');
+    }
+
     public function empMatch($id){
         return $id === $this->employee_id;
     }
@@ -39,8 +47,7 @@ class Expense extends Model
         return $id === $this->type_id;
     }
 
-    public function acountMatch($id)
-    {
+    public function acountMatch($id) {
         return $id === $this->compte_id;
     }
 

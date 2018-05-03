@@ -56,7 +56,7 @@
                                         <span class="caption-subject bold uppercase">إضافة خدمة</span>
                                     </div>
                                     
-                                    <button type="button" class="btn green pull-right"><i class="icon-check"></i> إستلام الخدمة </button>
+                                    <!-- <button type="button" class="btn green pull-right"><i class="icon-check"></i> إستلام الخدمة </button> -->
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
@@ -73,6 +73,17 @@
                                                 <div class="input-icon">
                                                     <i class="fa fa-file font-green "></i>
                                                     <input type="text" class="form-control" name="name" id="name" @isset($service->name) value="{{ $service->name }}" @endisset placeholder="اسم الخدمة"> 
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                            <div class="form-group">
+                                                <label>التاريخ <span>*</span></label>
+                                                <div class="input-group date-picker input-daterange" data-date="24-02-2018" data-date-format="dd-mm-yyyy">
+                                                    <input type="text" class="form-control date col-md-6" name="begin_at" id="begin_at" @isset($service->begin_at) value="{{ $service->begin_at }}" @endisset placeholder="من تاريخ">
+                                                    <span class="input-group-addon small-sp">  </span>
+                                                    <input type="text" class="form-control date col-md-6" name="end_at" id="end_at" @isset($service->end_at) value="{{ $service->end_at }}" @endisset placeholder="إلى تاريخ"> 
                                                 </div>
                                             </div>
                                         </div>
@@ -159,7 +170,8 @@
             $('.date').datepicker({
                 autoclose: true,
                 todayHighlight: true,
-                language: "ar"
+                language: "ar",
+				format: "yyyy-mm-dd"
             });
 		</script>
     </body>

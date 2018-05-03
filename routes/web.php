@@ -17,18 +17,34 @@ Route::get('logout', '\App\Http\Controllers\Auth\LoginController@logout');
 Route::GET('/', 'dashboardController@index')->name('home');
 Route::GET('/allProjectsAndServices', 'AllProjectsAndServices@index')->name('allProjectsAndServices');
 Route::POST('/allProjectsAndServices', 'AllProjectsAndServices@index')->name('fltrProjectsAndServices');
+
 Route::resource('projects', 'ProjectsController');
+Route::get('projects/{id}/pdf','ProjectsController@generatePDF')->name('projects.pdf');
+Route::get('/projectTranches/{id}', 'ProjectsController@jsonProjectTranches')->name('projectTranches');
+
 Route::resource('services', 'ServicesController');
+Route::get('services/{id}/pdf','ServicesController@generatePDF')->name('services.pdf');
+
 Route::resource('expenses', 'ExpensesController');
 Route::PUT('expenses', 'ExpensesController@index')->name('fltrExpenses');
+Route::get('expenses/{id}/pdf','ExpensesController@generatePDF')->name('expenses.pdf');
+
 Route::resource('payments', 'PaymentsController');
 Route::PUT('payments', 'PaymentsController@index')->name('fltrPayments');
+Route::get('payments/{id}/pdf','PaymentsController@generatePDF')->name('payments.pdf');
+
+Route::resource('clients', 'ClientController');
+Route::get('clients/{id}/pdf','ClientController@generatePDF')->name('clients.pdf');
+Route::resource('employees', 'EmployeeController');
+Route::get('employees/{id}/pdf','EmployeeController@generatePDF')->name('employees.pdf');
+Route::resource('users', 'UserController');
+Route::get('users/{id}/pdf','UserController@generatePDF')->name('users.pdf');
+
 Route::GET('/allUsers', 'AllUsers@index')->name('allUsers');
 Route::POST('/allUsers', 'AllUsers@index')->name('fltrUsers');
-Route::resource('clients', 'ClientController');
-Route::resource('employees', 'EmployeeController');
-Route::resource('users', 'UserController');
+
 Route::resource('transfer', 'TransferController');
+Route::get('transfer/{id}/pdf','TransferController@generatePDF')->name('transfer.pdf');
 
 Route::GET('/settings', 'SettingsController@index')->name('settings');
 Route::POST('/settings', 'SettingsController@index')->name('settingsFltr');

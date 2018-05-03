@@ -20,8 +20,7 @@ class SettingsController extends Controller
 {
     public function __construct() { $this->middleware('auth'); }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $allTime = ($request->method() == "POST" && $request->input('allTime')) || $request->method() == "GET";
         $allBanc = ($request->method() == "POST" && $request->input('allBanc')) || $request->method() == "GET";
 
@@ -42,7 +41,7 @@ class SettingsController extends Controller
         $banks = BancAcount::distinct()->get(['bank_name']);
         //Récupère tout les rates (pourcentages)
         $rates = Rate::all();
-        //Récupère tout les comptes
+        //Récupère tout les transferts
         if($allTime && $allBanc) {
             $transfers = Transfer::all();
         } else {
@@ -141,7 +140,10 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function editRate($rateId) { 
+    public function editRate($rateId, Request $request) { 
+        $allTime = ($request->method() == "POST" && $request->input('allTime')) || $request->method() == "GET";
+        $allBanc = ($request->method() == "POST" && $request->input('allBanc')) || $request->method() == "GET";
+
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -159,18 +161,40 @@ class SettingsController extends Controller
         $banks = BancAcount::distinct()->get(['bank_name']);
         //Récupère tout les rates (pourcentages)
         $rates = Rate::all();
-        //Récupère tout les comptes
-        $transfers = Transfer::all();
-        //Récupère le rate (pourcentage) a éditere
-        $rateToEdit = $rateId ? Rate::findOrFail($rateId) : null;
+        //Récupère tout les transferts
+        if($allTime && $allBanc) {
+            $transfers = Transfer::all();
+        } else {
+            $query = Transfer::query();
+            if(!$allBanc){
+                foreach($request->input('bancs') as $banc){
+                    $query->whereHas('AcountFrom', function($query) use($banc){
+                        $query->where('bank_name', 'like', $banc);
+                    });
+                    $query->orWhereHas('AcountTo', function($query) use($banc){
+                        $query->where('bank_name', 'like', $banc);
+                    });
+                }
+            }
+            if (!$allTime) {
+                $query->whereBetween('created_at', [$request->input('from'), $request->input('to')])->get();
+            }
+            $transfers = $query->get();
+        }
         //Récupère tout les projects
         $projects = Project::select('id', 'name')->get();
         //Récupère tout les clients
         $clients = Client::select('id', 'name')->get();
 
+        $rateToEdit = $rateId ? Rate::findOrFail($rateId) : null;
+
+        $transFltrs = ["allTime" => $allTime, "from" => $request->input('from'), "to" => $request->input('to'),
+            "allBanc" => $allBanc, "bancs" => $request->input('bancs')];
+
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
-            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "banks" => $banks,
-            "transfers" => $transfers, "rateToEdit" => $rateToEdit, "projects" => $projects, "clients" => $clients]);
+            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "transfers" => $transfers,
+            "banks" => $banks, 'projects' => $projects, 'clients' => $clients, "transFltrs" => $transFltrs,
+            "rateToEdit" => $rateToEdit]);
     }
 
     public function updateRate($rateId) {
@@ -184,7 +208,10 @@ class SettingsController extends Controller
         return redirect()->route('settings');
     }
 
-    public function editTransfer($transferId) { 
+    public function editTransfer($transferId, Request $request) {
+        $allTime = ($request->method() == "POST" && $request->input('allTime')) || $request->method() == "GET";
+        $allBanc = ($request->method() == "POST" && $request->input('allBanc')) || $request->method() == "GET";
+
         //Récupère tout les settings
         $settings = [];     $result = Settings::all();
         foreach ($result as $key => $value){
@@ -207,9 +234,18 @@ class SettingsController extends Controller
         //Récupère le rate (pourcentage) a éditere
         $transferToEdit = $transferId ? Transfer::findOrFail($transferId) : null;
 
+        //Récupère tout les projects
+        $projects = Project::select('id', 'name')->get();
+        //Récupère tout les clients
+        $clients = Client::select('id', 'name')->get();
+
+        $transFltrs = ["allTime" => $allTime, "from" => $request->input('from'), "to" => $request->input('to'),
+            "allBanc" => $allBanc, "bancs" => $request->input('bancs')];
+
         return view('Settings.index', ["settings" => $settings, "expenseTypes" => $expenseTypes, "roles" => $roles,
-            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates,
-            "transfers" => $transfers, "banks" => $banks, "transferToEdit" => $transferToEdit]);
+            "transferMethodes" => $transferMethodes, "acounts" => $acounts, "rates" => $rates, "banks" => $banks,
+            "transfers" => $transfers, "transferToEdit" => $transferToEdit, "transFltrs" => $transFltrs,
+            'projects' => $projects, 'clients' => $clients]);
     }
 
     private function canDo($section) {

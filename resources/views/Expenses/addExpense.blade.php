@@ -70,7 +70,7 @@
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
 											<label for="name">اسم المصروف <span>*</span></label>
-										<input type="text" name="name" id="name" class="form-control" @isset($expense) value="{{ $expense->name }}" @endisset placeholder=""> 
+											<input type="text" name="name" id="name" class="form-control" @isset($expense) value="{{ $expense->name }}" @endisset placeholder=""> 
 										</div>
 									</div>     
 																							
@@ -161,25 +161,26 @@
 																							
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
-											<label for="amount">الميلغ <span>*</span></label>
-											<select name="amount" id="amount" class="form-control select2 select-hide">
+											<label for="amount">المبلغ <span>*</span></label>
+											<input type="text" name="amount" id="amount" class="form-control">
+											<!--<select name="amount" id="amount" class="form-control select2 select-hide">
 												<option>-- إختر --</option>
 												<option value="1">1</option>
 												<option value="2">2</option>
 												<option value="3">3</option>
 												<option value="4">4</option>
-											</select>
+											</select>-->
 										</div>
 									</div>      
 																							
 									<div class="col-md-6 col-md-offset-3 col-sm-12">
 										<div class="form-group">
-											<label for="single10">إضافة نسبة <span>*</span></label>
-											<select id="single10" class="form-control select2 " name="expense_rates[]" id="expense_rates[]" multiple="multiple">
+											<label for="expense_rates">إضافة نسبة <span>*</span></label>
+											<select class="form-control select2 " name="expense_rates[]" id="expense_rates" multiple="multiple">
 												<option>-- إختر --</option>
 												@isset($rates)
 													@foreach ($rates as $rate)
-														<option value="{{ $rate->id }}" @isset($expense) {{ (in_array($rate->id, $selected)) ? ' selected="selected"' : '' }} @endisset>{{ $rate->name }}</option>
+														<option value="{{ $rate->id }}" rate="{{$rate->value}}" @isset($expense) {{ (in_array($rate->id, $selected)) ? ' selected="selected"' : '' }} @endisset>{{ $rate->name }}</option>
 													@endforeach
 												@endisset
 											</select>
@@ -191,7 +192,7 @@
 											<label>إجمالى المبلغ مع النسبة <span>*</span></label>
 											<div class="input-icon">
 												<i class="fa fa-money font-green "></i>
-												<input type="text" name="total_amount" id="total_amount" class="form-control" placeholder="" disabled> 
+												<input type="text" name="total_amount" id="total_amount" class="form-control" placeholder="" disabled>
 											</div>
 										</div>
 									</div>
@@ -311,6 +312,18 @@
 				format: "yyyy-mm-dd"
 			});
 			
+			$("#amount").on('input', function(){
+				$('#total_amount').val(this.value);
+			});
+			$('#expense_rates').on('change',function() {
+				var amount = parseInt($('#amount').val());
+				$("#expense_rates :selected").map(function(i, el) {
+					var rate = parseInt($(el).attr("rate"));
+					amount += (amount/100)*rate;
+				});
+				$('#total_amount').val(amount);
+			});
+
 			$(function() {
 				var reference_id = $('#reference_id option').clone();
 				$('#type_id').on('change', function() {

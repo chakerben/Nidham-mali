@@ -26,13 +26,15 @@ class Employee extends Model
         return $this->hasMany('App\EmployeeOtherTransferMethod');
     }
 
-    public function Expenses()
-    {
+    public function Expenses() {
         return $this->hasMany('App\Expense');
     }
+    
+    public function Role() {
+        return $this->belongsTo('App\Role');
+    }
 
-    public function cliMatch($id)
-    {
+    public function cliMatch($id) {
         return $id === $this->role_id;
     }
 }

@@ -87,7 +87,7 @@
 										<tr>
 											<th class="desktop">م</th>
 											<th class="all no-padding"></th>
-											<th class="min-phone-l">اسم المشروع</th>
+											<th class="min-phone-l">اسم المصروف</th>
 											<th class="desktop">النوع</th>
 											<th class="min-phone-l">رقم المصروف</th>
 											<th class="min-tablet">المبلغ</th>
@@ -118,7 +118,7 @@
 															<li><a href="{{ route('expenses.show', $exp->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
 															<li><a href="{{ route('expenses.edit', $exp->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
 															<li><a href="#basic" class="font-red" data-toggle="modal"id="{{ $exp->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-															<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+															<li><a href="{{ route('expenses.pdf', $exp->id) }}" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 														</ul>
 													</div>
 												</td>

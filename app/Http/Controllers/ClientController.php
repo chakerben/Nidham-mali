@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Client;
 //use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
@@ -23,8 +24,11 @@ class ClientController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("UsrAc")){
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/clients', $name);
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/clients', $name);
+            }
         
             $client = Client::create([
                 'name' => $request->input('name'),
@@ -72,7 +76,13 @@ class ClientController extends Controller
         return redirect()->route('allUsers');
     }
 
-    private function canDo($section){
+    public function generatePDF($clientId) {
+        $client = Client::findOrFail($clientId);
+        $pdf = PDF::loadView('users.clientPDF', ["client" => $client]);
+        return $pdf->download($client->name.'.pdf');
+    }
+
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["UsrPerms"];
         return $permissions["$section"];
     }

@@ -110,7 +110,7 @@
 																	</div>
 																</div>
 															
-																<div class="col-md-6 col-xs-12">
+																<!-- <div class="col-md-6 col-xs-12">
 																	<div class="form-group">
 																		<label class="control-label col-md-4">المنطقة الزمنية</label>
 																		<div class="col-md-8">
@@ -168,7 +168,7 @@
 																			</select>
 																		</div>
 																	</div>
-																</div>
+																</div> -->
 															</form>
 														</div>
 													</div>
@@ -712,7 +712,7 @@
 																					<li><a href="{{ route('transfer.edit', $rate->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
 																					<li><a href="{{ route('transfer.edit', $rate->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
 																					<li><a href="#basic" class="font-red" data-toggle="modal" id="{{ "transfer/".$transfer->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-																					<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+																					<li><a href="{{ route('transfer.pdf', $rate->id) }}" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 																				</ul>
 																			</div>
 																		</td>
@@ -814,8 +814,8 @@
 																							<i class="fa fa-angle-down"></i>
 																						</a>
 																						<ul class="dropdown-menu pull-right">
-																							<li><a href="{{ route('editRate', $rate->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																						<li><a href="#basic" class="font-red" data-toggle="modal" id="{{ "settings/deleterate/".$rate->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
+																							<li><a href="{{ route('editRate', $rate->id, true) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
+																						<li><a href="#basic" class="font-red" data-toggle="modal" id="{{ route('deleteRate', $rate->id, true) }}"><i class="icon-trash font-red"></i> حـذف</a></li>
 																						</ul>
 																					</div>
 																				</td>
@@ -1142,7 +1142,7 @@
 						from_acounts.filter(function() {
 							if (typeof(this.attributes.bank) == "undefined")
 								return false
-							return this.attributes.bank.value === val; 
+							return this.attributes.bank.value.toUpperCase() === val.toUpperCase(); 
 						})
 					);
 				})
@@ -1156,7 +1156,7 @@
 						to_acounts.filter(function() {
 							if (typeof(this.attributes.bank) == "undefined")
 								return false
-							return this.attributes.bank.value === val; 
+							return this.attributes.bank.value.toUpperCase() === val.toUpperCase(); 
 						})
 					);
 				})

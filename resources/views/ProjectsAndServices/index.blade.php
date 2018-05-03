@@ -109,13 +109,15 @@
 															<li><a href="{{ route($element->type.'.show', $element->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
 															<li><a href="{{ route($element->type.'.edit', $element->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
 															<li><a href="#basic" class="font-red" data-toggle="modal" id="{{ $element->type."/".$element->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-															<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+															<li><a href="{{ route($element->type.'.pdf', $element->id) }}" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 														</ul>
 													</div>
 												</td>
 											</tr>
 										@empty
-											<tr>No projects or services</tr>
+											<tr>
+												<td colspan="7">No projects or services</td>
+											</tr>
 										@endforelse
 									</tbody>
 								</table>
@@ -193,10 +195,30 @@
 
 			$("#checkAll").click(function(){
 				var state = this.checked;
-				$('input:checkbox').not(this).not("#allTime").not("#finiched").not("#inProgres").each(function() {
+				$('input:checkbox').not(this).not("#allTime").not("#finished").not("#inProgres").each(function() {
 					if(this.checked != state)
 						this.click();
 				});
+			})
+			function activ(elm, flag) {
+				elm.prop('disabled', !flag);
+				elm.prop('checked', flag);
+				if(flag){
+					elm.parent().parent().removeClass('disabled');
+					elm.parent().addClass('checked');
+				} else {
+					elm.parent().parent().addClass('disabled');
+					elm.parent().removeClass('checked');
+				}
+			}
+			$("#projects").click(function(){
+				activ($('#projectsOk'), this.checked);
+				activ($('#projectsNok'), this.checked);
+				activ($('#projectsNull'), this.checked);
+			})
+			$("#allTime").click(function(){
+				$('#from').prop('disabled', this.checked);
+				$('#to').prop('disabled', this.checked);
 			})
 		</script>
     </body>

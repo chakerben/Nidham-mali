@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
+use App\Rate;
+use App\Client;
 use App\Expense;
-use App\ExpenseType;
-use App\BancAcount;
 use App\Project;
 use App\Service;
-use App\TransferMethode;
-use App\Rate;
 use App\Employee;
-use App\Client;
+use App\BancAcount;
+use App\ExpenseType;
+use App\TransferMethode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -109,10 +110,11 @@ class ExpensesController extends Controller
             $rates = Rate::select('id', 'name')->get();
 
             $expense = Expense::findOrFail($expenseId);
+            $selected = $expense->Rates->pluck('id')->all();
 
             return view('Expenses.addExpense', ["projects" => $projects, 'services' => $services, "rates" => $rates,
                 "expenseTypes" => $expenseTypes, "bancAcounts" => $bancAcounts, "transferMethodes" => $transferMethodes,
-                "listProp" => $listProp, "expense" => $expense]);
+                "listProp" => $listProp, "expense" => $expense, "selected" => $selected]);
         } else { return redirect()->route('expenses.index'); }
     }
 
@@ -124,18 +126,22 @@ class ExpensesController extends Controller
             $listProp = Employee::select('id', 'name')->get();
             $bancAcounts = BancAcount::select('id', 'bank_name', 'count_num')->get();
             $transferMethodes = TransferMethode::select('id', 'name')->get();
-            $rates = Rate::select('id', 'name')->get();
-            return view('Expenses.addExpense', ["projects" => $projects, 'services' => $services, "rates" => $rates,
-                "expenseTypes" => $expenseTypes, "bancAcounts" => $bancAcounts, "transferMethodes" => $transferMethodes,
-                "listProp" => $listProp]);
+            $rates = Rate::select('id', 'name', 'value')->get();
+            return view('Expenses.addExpense', ["projects" => $projects, 'services' => $services,
+                "rates" => $rates, "expenseTypes" => $expenseTypes, "bancAcounts" => $bancAcounts,
+                "transferMethodes" => $transferMethodes, "listProp" => $listProp]);
         } else { return redirect()->route('expenses.index'); }
     }
 
     public function store(Request $request) {
         if($this->canDo("ExpA")){
             $hType = $request->input('hiden_type');
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/expenses', $name);
+
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/expenses', $name);
+            }
             
             $expense = Expense::create([
                 'name' => $request->input('name'),
@@ -212,6 +218,12 @@ class ExpensesController extends Controller
             $expense->delete();
         }
         return redirect()->route('expenses.index');
+    }
+
+    public function generatePDF($expenseId) {
+        $expense = Expense::findOrFail($expenseId);
+        $pdf = PDF::loadView('expenses.expensePDF', ["expense" => $expense]);
+        return $pdf->download($expense->name.'_'.$expenseId.'.pdf');
     }
 
     private function canDo($section){

@@ -7,9 +7,7 @@
     <!--<![endif]-->
     <!-- BEGIN HEAD -->
 
-    <head>
-        @include('common.head')
-    </head>
+    <head> @include('common.head') </head>
     <!-- END HEAD -->
 
     <body class="page-header-fixed page-sidebar-closed-hide-logo page-container-bg-solid page-md">
@@ -36,8 +34,6 @@
             <div class="page-content-wrapper">
                 <!-- BEGIN CONTENT BODY -->
                 <div class="page-content">
-                   
-                   
                     <!-- BEGIN PAGE HEADER-->
                     <h3 class="page-title"> المشاريع والخدمات
                         <small></small>
@@ -61,81 +57,71 @@
                                     <div class="tools"> </div>
                                 </div>
                                 <div class="portlet-body">
-                                                                    
-                                                
-                                                                                          
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<div class="form-group">
-										<label>اسم الخدمة <span>*</span></label>
-										<div class="input-icon">
-											<i class="fa fa-file font-green "></i>
-											<input type="text" class="form-control" value="{{$service->name}}" placeholder="اسم الخدمة" disabled> 
-										</div>
-									</div>
-							     </div>
-                                                                     
-                                                                     
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<div class="form-group">
-										<label>التكلفة الاجمالية </label>
-										<div class="input-icon">
-											<i class="fa fa-money font-green "></i>
-											<input type="text" class="form-control" value="{{$service->cost}} ريال" placeholder="1000 ريال" disabled> 
-										</div>
-									</div>
-							     </div>
-                                                                    
-                                                                     
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<div class="form-group">
-										<label>التفاصيل</label>
-										<textarea class="form-control" rows="5" disabled>{{$service->details}}</textarea>
-									</div>
-							     </div>
-                                  
-									                    
-                                                                     
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<div class="form-group">
-										<label>ملاحظات</label>
-										<textarea class="form-control" rows="5" disabled>{{$service->remarques}}</textarea>
-									</div>
-							     </div>
-                                 
-                                                      
-                                                                     
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<hr>
-							     </div>
-                                 
-                                                      
-                                                                     
-								 <div class="col-md-6 col-md-offset-3 col-sm-12">
-									<div class="form-group">
-										<label>إجمالى المبلغ المصروف</label>
-										<div class="col-md-12">
-										
-											<input type="text" class="form-control" value="800 ريال" disabled>
-											
-										</div>
-									</div>
-							     </div> 
-                                  
-                                   <div class="clearfix"></div>
-                                   
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>اسم الخدمة <span>*</span></label>
+                                            <div class="input-icon">
+                                                <i class="fa fa-file font-green "></i>
+                                                <input type="text" class="form-control" value="{{$service->name}}" placeholder="اسم الخدمة" disabled> 
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>التاريخ <span>*</span></label>
+                                            <div class="input-group date-picker input-daterange" data-date-format="dd-mm-yyyy">
+                                                <input type="text" class="form-control date col-md-6" name="begin_at" id="begin_at" value="{{ $service->begin_at }}" disabled>
+                                                <span class="input-group-addon small-sp">  </span>
+                                                <input type="text" class="form-control date col-md-6" name="end_at" id="end_at" value="{{ $service->end_at }}" disabled> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>التكلفة الاجمالية </label>
+                                            <div class="input-icon">
+                                                <i class="fa fa-money font-green "></i>
+                                                <input type="text" class="form-control" value="{{$service->cost}} ريال" placeholder="1000 ريال" disabled> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>التفاصيل</label>
+                                            <textarea class="form-control" rows="5" disabled>{{$service->details}}</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>ملاحظات</label>
+                                            <textarea class="form-control" rows="5" disabled>{{$service->remarques}}</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12"> <hr> </div>
+                                    
+                                    <div class="col-md-6 col-md-offset-3 col-sm-12">
+                                        <div class="form-group">
+                                            <label>إجمالى المبلغ المصروف</label>
+                                            <div class="col-md-12">
+                                                <input type="text" class="form-control" value="{{ $service->totalExpens }} ريال" disabled>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="clearfix"></div>
                                 </div>
                             </div>
                             @endisset
                             <!-- END EXAMPLE TABLE PORTLET-->
                         </div>
-                        
                     </div>
                     <div class="clearfix"></div>
                     <!-- END DASHBOARD STATS 1-->
-                    
-                    
-                    
-                    
                 </div>
                 <!-- END CONTENT BODY -->
             </div>

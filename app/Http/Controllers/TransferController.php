@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Transfer;
 use App\BancAcount;
 
@@ -76,6 +77,12 @@ class TransferController extends Controller
 
         $transfer->delete();
         return redirect()->route('settings');
+    }
+
+    public function generatePDF($transferId) {
+        $transfer = Transfer::findOrFail($transferId);
+        $pdf = PDF::loadView('settings.transferPDF', ["transfer" => $transfer]);
+        return $pdf->download($transferId.'_'.$transfer->created_at.'.pdf');
     }
 
     private function canDo($section){

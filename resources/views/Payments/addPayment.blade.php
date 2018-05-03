@@ -336,7 +336,7 @@
 
 			$('#project').on('change', function(){
 				var id = $(this).val();
-				$.getJSON("/api/projectTranches/" + id , function(data){
+				$.getJSON("/projectTranches/" + id , function(data){
 					console.log(data);
 					var subcat = $('#tranche_id').empty();
 					$.each(data, function(key, value){

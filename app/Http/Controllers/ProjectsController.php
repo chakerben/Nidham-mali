@@ -6,6 +6,7 @@ use App\Project;
 use App\Client;
 use App\Tranche;
 //use Illuminate\Support\Facades\Input as Input;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -147,6 +148,19 @@ class ProjectsController extends Controller
             $project->delete();
         }
         return redirect()->route('allProjectsAndServices');
+    }
+
+    public function generatePDF($projectId) {
+        $project = Project::findOrFail($projectId);
+        $project->payd = 0;
+        foreach($project->tranches as $tranche){
+            foreach($tranche->payments as $payment){
+                $project->payd += $payment->amount;
+            }
+        }
+        $project->dept = 0;
+        $pdf = PDF::loadView('ProjectsAndServices.projectPDF', ["project" => $project]);
+        return $pdf->download($project->name.'_'.$projectId.'.pdf');
     }
 
     public function jsonProjectTranches($projectId) {

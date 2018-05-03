@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Employee;
+use PDF;
 use App\Role;
-//use App\TransferMethode;
-use App\EmployeePaypalAcount;
+use App\Employee;
 use App\EmployeeBanklAcount;
+use App\EmployeePaypalAcount;
 use App\EmployeeOtherTransferMethod;
-//use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -33,8 +32,11 @@ class EmployeeController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("UsrAe")){
-            $name = $request->file('upload')->getClientOriginalName();
-            $path = $request->file('upload')->storeAs('files/employees', $name);
+            $name = "";
+            if(!is_null($request->file('upload'))){
+                $name = $request->file('upload')->getClientOriginalName();
+                $path = $request->file('upload')->storeAs('files/employees', $name);
+            }
         
             $employee = Employee::create([
                 'name' => $request->input('name'),
@@ -112,7 +114,13 @@ class EmployeeController extends Controller
         return redirect()->route('allUsers');
     }
 
-    private function canDo($section){
+    public function generatePDF($employeeId) {
+        $employee = Employee::findOrFail($employeeId);
+        $pdf = PDF::loadView('users.employeePDF', ["employee" => $employee]);
+        return $pdf->download($employee->name.'.pdf');
+    }
+
+    private function canDo($section) {
         $permissions = unserialize(Auth::user()->permissions)["UsrPerms"];
         return $permissions["$section"];
     }

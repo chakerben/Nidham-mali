@@ -11,8 +11,7 @@ class client extends Model
     protected $fillable = ['name', 'paymentMode', 'details', 'file'];
     protected $dates = ['deleted_at'];
 
-    public function Projects()
-    {
+    public function Projects() {
         return $this->hasMany('App\Project');
     }
 }

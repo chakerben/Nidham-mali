@@ -108,7 +108,7 @@
 																		<li><a href="{{ route('payments.show', $pay->id) }}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
 																		<li><a href="{{ route('payments.edit', $pay->id) }}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
 																		<li><a href="#basic" class="font-red" data-toggle="modal"id="{{ $pay->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-																		<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+																		<li><a href="{{ route('payments.pdf', $pay->id) }}" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 																	</ul>
 																</div>
 															</td>

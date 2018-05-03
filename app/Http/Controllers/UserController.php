@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\User;
-use Illuminate\Support\Facades\Input as Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input as Input;
 
 class UserController extends Controller
 {
     public function __construct() { $this->middleware('auth'); }
 
-    public function index(){
+    public function index() {
         return redirect()->route('allUsers');
     }
 
@@ -83,7 +84,13 @@ class UserController extends Controller
         return redirect()->route('allUsers');
     }
 
-    private function getPermissions($prefix, $perms){
+    public function generatePDF($userId) {
+        $user = User::findOrFail($userId);
+        $pdf = PDF::loadView('users.userPDF', ["user" => $user]);
+        return $pdf->download($user->name.'.pdf');
+    }
+
+    private function getPermissions($prefix, $perms) {
         $permissions = [];
         foreach($perms as $perm){
             $permissions[$prefix.$perm] = input::get($prefix.$perm) == "on";
@@ -95,8 +102,8 @@ class UserController extends Controller
         $allPerms = [
             "PrjPerms" => $this->getPermissions('Prj', ['A', 'U', 'D', 'S', 'T']),
             "SrvPerms" => $this->getPermissions('Srv', ['A', 'U', 'D', 'S', 'T']),
-            "PayPerms" => $this->getPermissions('Pay', ['A', 'U', 'D', 'S', 'U1', 'U2']),
-            "ExpPerms" => $this->getPermissions('Exp', ['A', 'U', 'D', 'S', 'U1', 'U2']),
+            "PayPerms" => $this->getPermissions('Pay', ['A', 'U', 'D', 'S', 'Up']),
+            "ExpPerms" => $this->getPermissions('Exp', ['A', 'U', 'D', 'S', 'Up']),
             "SetPerms" => $this->getPermissions('Set', ['Ag', 'Ug', 'Aa', 'Ua', 'At', 'Ar']),
             "UsrPerms" => $this->getPermissions('Usr', ['Au', 'Ac', 'Ae', 'Uu', 'Uc', 'Ue', 'Du', 'Dc', 'De'])
         ];

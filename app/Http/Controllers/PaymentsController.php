@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use App\Payment;
 use App\Project;
 use App\Client;
@@ -82,7 +83,7 @@ class PaymentsController extends Controller
     public function show($paymentId) {
         if($this->canDo("PayS")){
             $payment = Payment::findOrFail($paymentId);
-            return view('PaymentsAndServices.paymentDetails', ["payment" => $payment]);
+            return view('Payments.addPayment', ["payment" => $payment]);
         } else { return redirect()->route('payments.index'); }
     }
 
@@ -95,10 +96,13 @@ class PaymentsController extends Controller
 
     public function store(Request $request) {
         if($this->canDo("PayA")){
+
             $name = "";
-            if(!is_null($request->file('upload'))){
-                $name = $request->file('upload')->getClientOriginalName();
-                $path = $request->file('upload')->storeAs('files/payments', $name);
+            if($this->canDo("PayUp")){
+                if(!is_null($request->file('upload'))){
+                    $name = $request->file('upload')->getClientOriginalName();
+                    $path = $request->file('upload')->storeAs('files/payments', $name);
+                }
             }
         
             $payment = Payment::create([
@@ -135,9 +139,11 @@ class PaymentsController extends Controller
             $payment = Payment::findOrFail($paymentId);
 
             $name = "";
-            if(!is_null($request->file('upload'))){
-                $name = $request->file('upload')->getClientOriginalName();
-                $path = $request->file('upload')->storeAs('files/payments', $name);
+            if($this->canDo("PayUp")){
+                if(!is_null($request->file('upload'))){
+                    $name = $request->file('upload')->getClientOriginalName();
+                    $path = $request->file('upload')->storeAs('files/payments', $name);
+                }
             }
             
             $payment->fill([
@@ -168,6 +174,12 @@ class PaymentsController extends Controller
             $payment->delete();
             return redirect()->route('payments.index');
         }
+    }
+
+    public function generatePDF($paymentId) {
+        $payment = Payment::findOrFail($paymentId);
+        $pdf = PDF::loadView('payments.paymentPDF', ["payment" => $payment]);
+        return $pdf->download($payment->tranche->project->name.'_'.$paymentId.'.pdf');
     }
 
     private function canDo($section) {

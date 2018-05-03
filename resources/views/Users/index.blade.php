@@ -92,10 +92,10 @@
 																<i class="fa fa-angle-down"></i>
 															</a>
 															<ul class="dropdown-menu pull-right">
-																<li><a href="/{{$user->root."/".$user->id}}/edit" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
-																<li><a href="/{{$user->root."/".$user->id}}/edit" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
-																<li><a href="#basic" class="font-red" data-toggle="modal"  id="{{ $user->root."/".$user->id }}"><i class="icon-trash font-red"></i> حـذف</a></li>
-																<li><a href="#" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
+																<li><a href="{{route($user->root.'.edit', $user->id, true)}}" class="font-purple"><i class="icon-eye font-purple"></i> عـرض</a></li>
+																<li><a href="{{route($user->root.'.edit', $user->id, true)}}" class="font-blue"><i class="icon-note font-blue"></i> تعديل</a></li>
+																<li><a href="#basic" class="font-red" data-toggle="modal"  id="{{route($user->root.'.destroy', $user->id, true)}}"><i class="icon-trash font-red"></i> حـذف</a></li>
+																<li><a href="{{route($user->root.'.pdf', $user->id)}}" class="font-green"><i class="icon-cloud-download font-green"></i> تحميل</a></li>
 															</ul>
 														</div>
 													</td>

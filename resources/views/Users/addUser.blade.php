@@ -122,9 +122,6 @@
 													<label class="font-purple"><h4>المشاريع</h4></label>
 													<div class="input-group">
 														<div class="icheck-inline">
-															<!--@foreach($allPermissions["PrjPerms"] as $key => $val)
-																<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="{{$key}}" id="{{$key}}" {{$val ? 'checked' : ''}}> تعديل </label>
-															@endforeach-->
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PrjA" id="PrjA" {{$allPermissions["PrjPerms"]["PrjA"] ? 'checked' : ''}}> إضافة </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PrjU" id="PrjU" {{$allPermissions["PrjPerms"]["PrjU"] ? 'checked' : ''}}> تعديل </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PrjD" id="PrjD" {{$allPermissions["PrjPerms"]["PrjD"] ? 'checked' : ''}}> حذف </label>
@@ -155,8 +152,8 @@
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayU" id="PayU" {{$allPermissions["PayPerms"]["PayU"] ? 'checked' : ''}}> تعديل </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayD" id="PayD" {{$allPermissions["PayPerms"]["PayD"] ? 'checked' : ''}}> حذف </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayS" id="PayS" {{$allPermissions["PayPerms"]["PayS"] ? 'checked' : ''}}> عرض </label>
-															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayU1" id="PayU1" {{$allPermissions["PayPerms"]["PayU1"] ? 'checked' : ''}}> تحميل سند صرف </label>
-															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayU2" id="PayU2" {{$allPermissions["PayPerms"]["PayU2"] ? 'checked' : ''}}> تحميل سند قبض </label>
+														<!--<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayU1" id="PayU1"> تحميل سند صرف </label>-->
+															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="PayUp" id="PayUp" {{$allPermissions["PayPerms"]["PayUp"] ? 'checked' : ''}}> تحميل سند قبض </label>
 														</div>
 													</div>
 												</div>
@@ -169,8 +166,8 @@
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpU"  id="ExpU"  {{$allPermissions["ExpPerms"]["ExpU"]  ? 'checked' : ''}}> تعديل </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpD"  id="ExpD"  {{$allPermissions["ExpPerms"]["ExpD"]  ? 'checked' : ''}}> حذف </label>
 															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpS"  id="ExpS"  {{$allPermissions["ExpPerms"]["ExpS"]  ? 'checked' : ''}}> عرض </label>
-															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpU1" id="ExpU1" {{$allPermissions["ExpPerms"]["ExpU1"] ? 'checked' : ''}}> تحميل سند صرف </label>
-															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpU2" id="ExpU2" {{$allPermissions["ExpPerms"]["ExpU2"] ? 'checked' : ''}}> تحميل سند قبض </label>
+															<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpU1" id="ExpU1" {{$allPermissions["ExpPerms"]["ExpUp"] ? 'checked' : ''}}> تحميل سند صرف </label>
+															<!--<label><input type="checkbox" class="icheck" data-checkbox="icheckbox_square-purple" name="ExpU2" id="ExpU2"> تحميل سند قبض </label>-->
 														</div>
 													</div>
 												</div>
